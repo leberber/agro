@@ -16,14 +16,26 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
     show_cart_items: function (data) {
         console.log(data)
-        var arr = [];
+        var articles = [];
         // const entries = Object.entries(data);
         Object.entries(data).forEach(([key, value]) => {
+            articles.push(
+                {'props': {'children': [
+                    {'props': {'children': {'props': {'src': 'assets/sucre.png', 'width': 40}, 'type': 'Image', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'},
+                    {'props': {'children': {'props': {'children': key}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+                    {'props': {'children': {'props': {'children': value['price']}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+                    {'props': {'children': {'props': {id :key, 'hideControls': true, 'value': value['quantity']},  'type': 'NumberInput', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+                    {'props': {'children': {'props': {'children': value['total']}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}
+                ], 
+                'align': 'center', 
+                'className': 'checkout_grids',
+                 'gutter': 'xl', 'justify': 'center'
+                }, 'type': 'Grid', 'namespace': 'dash_mantine_components'}
+
+            )
+            
             console.log(
-                `key: ${key}`,
-                `price: ${value['price']}`,
-                `quantity: ${value['quantity']}`,
-                `total: ${value['total']}`,
+               key
                 )
         });
 
@@ -31,8 +43,20 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
     // console.log(element)
     //     ));
  
-        
-        return 'data'
+        let items = {'props': {'children': articles}, 'type': 'Div', 'namespace': 'dash_html_components'}
+        let header = {'props': {'children': [
+            {'props': {'children': '', 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'},
+            {'props': {'children': {'props': {'children': 'Article'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+            {'props': {'children': {'props': {'children': 'Prix Unite'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+            {'props': {'children': {'props': {'children': 'Quantite'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+            {'props': {'children': {'props': {'children': 'Total'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}
+        ], 
+        'align': 'center', 
+        'className': 'checkout_grids',
+         'gutter': 'xl', 'justify': 'center'
+        }, 'type': 'Grid', 'namespace': 'dash_mantine_components'}
+
+        return {'props': {'children': [header, items]}, 'type': 'Div', 'namespace': 'dash_html_components'}
 
     }
     },

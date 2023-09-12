@@ -1,20 +1,25 @@
-
+#.to_plotly_json()
 from dash import Dash, dcc, html, Input, Output, ALL, Patch, callback, ctx, no_update, MATCH, State, clientside_callback, ClientsideFunction
 import dash_mantine_components as dmc
 import json
 from dash_iconify import DashIconify
 
 
-app = Dash(__name__)
+app = Dash(__name__, 
+           suppress_callback_exceptions=True
+           )
 
 data= {
     'huile':{'1L':'140', '2L':'280', '5L':'500'},
     'sucre':{'1K':'40', '2K':'80', '5L':'150'},
+     'tomate':{'1C':'40', '2C':'80'},
    
 }
 
+for i in range(0,10):
+    data['huile'+str(i)] = {'1L':'140', '2L':'280', '5L':'500'}
+print(data.__sizeof__())
 
-# dmc.Paper(artile_type, style= {'border':'3px solid red'}) id={'type': 'articled','index': key},
 article_card = []
 for article, value in data.items():
     artile_type = []
@@ -38,16 +43,12 @@ for article, value in data.items():
         dmc.Card(
             children=[
                 dmc.CardSection(
-                    dmc.Center(  dmc.Image(
-                        src=f"assets/{article}.png",
-                        width = 200,
-                
-                    ))
+                    dmc.Center(  dmc.Image(src=f"assets/huile.png", width = 200))
                   ,p = 30,
                 ),
                 dmc.Text(
                     [
-                        dmc.Text(f"{article.capitalize()}",id = f'{article}', className='article_name'),
+                        dmc.Text(f"{article}",id = f'{article}', className='article_name'),
                     ],
                  
                 ),
@@ -61,11 +62,10 @@ for article, value in data.items():
         )
     )
 
-
         
 app.layout = html.Div(
     children=[
-            dmc.ActionIcon(
+        dmc.ActionIcon(
             DashIconify(icon="material-symbols:garden-cart", width=20),
             size="lg",
             variant="filled",
@@ -75,33 +75,16 @@ app.layout = html.Div(
         ),
        html.Div(article_card),
        dcc.Store(id = 'items-in-chart', data = {}),
-    dmc.Modal(
-            title="Cart",
+        dmc.Modal(
             size="55%",
             id="cart-modal",
             zIndex=10000,
             children=[
-                
-                dmc.Text("here all the items saved to cart"),
-                html.Div(
-    # children =""" # """,
-    id = 'cart-items',
-    # language="python",
-    # colorScheme="dark",
-),
+                html.Div( id = 'cart-items'),
             ],
         ),
-       
     ]  
 )
-
-# @callback(
-#     Output("cart-items", "children"),
-#     Input("items-in-chart", "data"),
-#     prevent_initial_call=True,
-# )
-# def view_cart(value):
-#     return json.dumps(value, indent=4)
 
 app.clientside_callback(
      ClientsideFunction(
@@ -123,39 +106,6 @@ app.clientside_callback(
 def modal_demo(nc3, opened):
     return not opened
 
-# def product_calls(article, article_type):
-#     @callback(
-#         Output('items-in-chart','data', allow_duplicate=True),
-#         Output( f'sum_{article}_{article_type}', 'children'),
-#         State( f'{article}', 'children'),
-#         State( f'name_{article}_{article_type}', 'children'),
-#         State( f'price_{article}_{article_type}', 'children'),
-#         Input( f'number_input_{article}_{article_type}', 'value'),
-#         State('items-in-chart', 'data'),
-        
-#         prevent_initial_call =True
-
-#     )
-
-#     def store_item_in_chart(artile, article_type, price, number_input, data):
-#         if not number_input:
-#             print('empy')
-#             return no_update
-#         # if number_input is None:
-#         #     print('this is none')
-#         #     return no_update
-
-#         print(artile, article_type, price, 'input', str(number_input), type(number_input))
-#         data[artile]={'article_type':article_type, 'article_price':price, 'item_quantity': number_input}
-#         print('-----')
-#         return data, int(price) * number_input   
-# function isObjEmptyUsingEntries (obj) {
-        #     return Object.entries(obj).length === 0;
-        # }
-
-        # var emptyObject = {};
-        
-
         
 def product_calls(article, article_type):
     clientside_callback(
@@ -175,18 +125,27 @@ def product_calls(article, article_type):
         prevent_initial_call =True
     )
 
-
-
-
-
 for article, value in data.items():
     for article_type, value in value.items():
         product_calls(article, article_type)
 
 
-    
 
+
+
+def product_calls_nested(article, article_type):
+    @callback(
+        Output(f'number_input_{article}_{article_type}', 'value'),
+        Input(f"{article}_{article_type}", "value"),
+        prevent_initial_call=True,
+    )
+    def view_cart_(value):
+        return value
+    
+for article, value in data.items():
+    for article_type, value in value.items():
+        product_calls_nested(article, article_type)
 
 if __name__ == "__main__":
-    app.run(app.run_server(debug=True, host='0.0.0.0', port=8050))
+    app.run_server(debug=True, host='0.0.0.0', port=8050, dev_tools_ui=False)
 
