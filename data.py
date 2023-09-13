@@ -1,0 +1,80 @@
+cevital = {'Sauce Harissa Elio': 'https://www.cevital-agro-industrie.com/storage/2023/08/harissa-elio-min.jpg',
+ 'Huile Spéciale Friture FLEURIAL': 'https://www.cevital-agro-industrie.com/storage/2023/06/huile-friture.jpg',
+ 'Vinaigrettes': 'https://www.cevital-agro-industrie.com/storage/2023/03/Vinaigrettes-1-1.jpg',
+ 'Harissa': 'https://www.cevital-agro-industrie.com/storage/2023/03/harissa-1-1-1.jpg',
+ 'Mayonnaise FLEURIAL': 'https://www.cevital-agro-industrie.com/storage/2023/03/851.jpg',
+ 'Mayonnaise Ail et Fines Herbes': 'https://www.cevital-agro-industrie.com/storage/2023/03/mayonnaise-ail-et-fines-herbes-1.jpg',
+ 'Sauce Mayonnaise': 'https://www.cevital-agro-industrie.com/storage/2023/03/sauce-mayonnaise-700g-1.jpg',
+ 'Moutarde': 'https://www.cevital-agro-industrie.com/storage/2023/03/moutarde-350g-1-1.jpg',
+ 'Ketchup': 'https://www.cevital-agro-industrie.com/storage/2023/01/Ketchup.jpg',
+ 'Mayonnaise FOODY’S': 'https://www.cevital-agro-industrie.com/storage/2023/03/sauce-mayonnaise-1.jpg',
+ 'Chocolat en Poudre Matina': 'https://www.cevital-agro-industrie.com/storage/2023/03/chocolat-en-poudre-500g.jpg',
+ 'Huile de Colza FLEURIAL': 'https://www.cevital-agro-industrie.com/storage/2023/02/Huile-de-Colza-FLEURIAL-.jpg',
+ 'Huile de Tournesol FLEURIAL': 'https://www.cevital-agro-industrie.com/storage/2023/02/Huile-de-Tournesol-FLEURIAL-.jpg',
+ 'Huile de Soja ELIO': 'https://www.cevital-agro-industrie.com/storage/2023/02/Huile-de-Soja-ELIO.jpg',
+ 'Beurre Tendre Gourmand': 'https://www.cevital-agro-industrie.com/storage/2023/02/Beurre-Tendre-Gourmand.jpg',
+ 'Mélange Matière Grasse MATINA': 'https://www.cevital-agro-industrie.com/storage/2023/02/Melange-Matiere-Grasse-MATINA.jpg',
+ 'Margarine de Feuilletage LA PARISIENNE': 'https://www.cevital-agro-industrie.com/storage/2023/02/margarine-la-parisienne-1K.jpg',
+ 'Smen MEDINA': 'https://www.cevital-agro-industrie.com/storage/2023/02/smen-500g.jpg',
+ 'Margarine de Table FLEURIAL Plaquette': 'https://www.cevital-agro-industrie.com/storage/2023/02/Margarine-de-Table-FLEURIAL-Plaquette.jpg',
+ 'Margarine de Table FLEURIAL Barquette': 'https://www.cevital-agro-industrie.com/storage/2023/02/margarine-barquette-250g.jpg',
+ 'Confitures MATINA Figue': 'https://www.cevital-agro-industrie.com/storage/2023/02/confiture-figue-9.jpg',
+ 'Confitures MATINA Abricot': 'https://www.cevital-agro-industrie.com/storage/2023/02/confiture-abricot-6.jpg',
+ 'Confitures MATINA Fraise': 'https://www.cevital-agro-industrie.com/storage/2023/02/confiture-fraise-5.jpg',
+ 'Assila': 'https://www.cevital-agro-industrie.com/storage/2023/02/assila-1.jpg',
+ 'Sucre Blanc Raffiné': 'https://www.cevital-agro-industrie.com/storage/2023/01/Sucre-Blanc.jpg',
+ 'Sucre Glace': 'https://www.cevital-agro-industrie.com/storage/2023/02/sucre-glace-2.jpg',
+ 'Sucre Roux Cristallisé': 'https://www.cevital-agro-industrie.com/storage/2023/02/Sucre-Roux.jpg',
+ 'TCHINA Citonnade': 'https://www.cevital-agro-industrie.com/storage/2023/07/citronnade.jpg',
+
+ 'TCHINA Jus en Verre': 'https://www.cevital-agro-industrie.com/storage/2023/03/jus-en-verre-orange.jpg',
+ 'Lalla Khedidja Eau Minérale Naturelle Gazéifiée': 'https://www.cevital-agro-industrie.com/storage/2023/02/Lalla-Khedidja-Eau-Mineral-Naturelle-Gazeifiee.jpg',
+ 'Lalla Khedidja Eau Minérale Naturelle': 'https://www.cevital-agro-industrie.com/storage/2023/02/Lalla-Khedidja-Eau-Mineral-Naturelle.jpg',
+ 'TCHINA PEP’S': 'https://www.cevital-agro-industrie.com/storage/2023/02/peps-orange-2.jpg',
+ 'TCHINA Orange Mandarine': 'https://www.cevital-agro-industrie.com/storage/2023/04/mandarine-1l.jpg',
+ 'TCHINA Orange Abricot': 'https://www.cevital-agro-industrie.com/storage/2023/02/orange-abricot-1L-2.jpg',
+ 'TCHINA Orange Pêche': 'https://www.cevital-agro-industrie.com/storage/2023/02/orange-peche-1L-4.jpg',
+ 'TCHINA Orange Mangue': 'https://www.cevital-agro-industrie.com/storage/2023/02/orange-mangue-1L-1-2-1.jpg',
+ 'TCHINA Cocktail Tropical': 'https://www.cevital-agro-industrie.com/storage/2023/02/cocktail-1L-2.jpg',
+ 'TCHINA Orange': 'https://www.cevital-agro-industrie.com/storage/2023/02/orange-1L-5.jpg'
+ }
+
+
+ammour = {
+    'Double Concentré de Tomates': 'https://groupeamour.com/images/dish_img_1.jpg',
+ 'Harissa': 'https://groupeamour.com/images/dish_img_2.jpg',
+ "Confiture d'Abricots": 'https://groupeamour.com/images/dish_img_5.jpg',
+ "Confiture d'Oranges": 'https://groupeamour.com/images/dish_img_4.jpg',
+ 'Confiture de Figues': 'https://groupeamour.com/images/dish_img_3.jpg',
+ 'Confiture de Pommes': 'https://groupeamour.com/images/dish_img_6.jpg',
+ 'Farine de blé tendre': 'https://groupeamour.com/images/dish_img_7.jpg',
+ 'Semoule Supérieure de blé dur - Grosse': 'https://groupeamour.com/images/dish_img_8.jpg',
+ 'Semoule - Demi Grosse': 'https://groupeamour.com/images/Semoule%20demi%20grosse%202.jpg',
+ 'Semoule - Moyenne': 'https://groupeamour.com/images/Semoule%20moyenne%202.jpg',
+ 'Semoule - Fine': 'https://groupeamour.com/images/Semoule%20fine%202.jpg',
+ 'Couscous Moyen': 'https://groupeamour.com/images/dish_img_9.jpg',
+ 'Couscous Gros': 'https://groupeamour.com/images/Couscous%20gros.jpg',
+ 'Couscous Fin': 'https://groupeamour.com/images/Couscous%20fin.jpg'}
+
+ramady = {'Fromage fondu portion':'https://www.ramdy-dz.com/file/img/fromge/ramdy-fromage-fondu-portion.jpg',
+'Fromage fondu barre':'https://www.ramdy-dz.com/file/img/fromge/ramdy-fromage-fondu-barre.jpg',
+'Fromage tartin':'https://www.ramdy-dz.com/file/img/fromge/ramdy-fromage-tartin.jpg',
+"Fromage à l'huile d'olive":'https://www.ramdy-dz.com/file/img/fromge/ramdy-fromage-huile-olive.jpg',
+'Fromage gyzmo':'https://www.ramdy-dz.com/file/img/fromge/ramdy-fromage-gyzmo.jpg',
+    }
+ramy= {'Ramy Extra':'https://www.ramyfood.com/media/k2/items/cache/be28adfff47893c4519c1307dc6b8866_M.jpg',
+'Ramy nature':'https://www.ramyfood.com/media/k2/items/cache/4d8c9898b5bb88437f053c8b957f47f3_M.jpg',
+'Ramy Délice':'https://www.ramyfood.com/media/k2/items/cache/53bed31cb74891ae64a31e4c592ef86d_M.jpg',
+'Ramy Boisson gazéifié Canette':'https://www.ramyfood.com/media/k2/items/cache/c1572c59821062c96d0fc33ad32a2983_M.jpg',
+'Ramy Bitter Plus':'https://www.ramyfood.com/media/k2/items/cache/1d73e13563b8be946c0f00bab252d7ea_M.jpg',
+}
+
+leBerber= {
+    'Fromage fondu portion':'http://www.promasidor.dz/media/3413/boite-16-portions-plus-une-portion.png',
+    'Fromage fondu barre':'http://www.promasidor.dz/media/3414/product_lb_croissance_square.png',
+    'Fromage cuisine':'http://www.promasidor.dz/media/3415/product_lb_cuisiner_barre-300gr.png',
+    'Fromage olive noir':'http://www.promasidor.dz/media/3249/barre-150gr-olive-noire-copy.png',
+    'Ail & fines-herbes':'http://www.promasidor.dz/media/3247/barre-150gr-ail-et-fines-herbes-copy.png',
+
+
+    }

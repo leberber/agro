@@ -4,68 +4,33 @@ import dash_mantine_components as dmc
 import json
 from dash_iconify import DashIconify
 
+import random
+
 
 app = Dash(__name__, 
            suppress_callback_exceptions=True
            )
 
 data= {
-    'huile':{'1L':'140', '2L':'280', '5L':'500'},
     'sucre':{'1K':'40', '2K':'80', '5L':'150'},
-     'tomate':{'1C':'40', '2C':'80'},
+    'huile':{'1L':'140', '2L':'280', '5L':'500'},
+    # 'sucre':{'1K':'40', '2K':'80', '5L':'150'},
+    #  'tomate':{'1C':'40', '2C':'80'},
    
 }
 
-for i in range(0,10):
-    data['huile'+str(i)] = {'1L':'140', '2L':'280', '5L':'500'}
-print(data.__sizeof__())
+for i in range(0,50):
+    s = random.choice(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
+    data[str(s)+'huile'+str(i)] = {'1L':'140', '2L':'280', '5L':'500'}
+print(json.dumps(data, indent=4))
+# print(data.__sizeof__())
 
-article_card = []
-for article, value in data.items():
-    artile_type = []
-    for article_type, value in value.items():
-        artile_type.append(
-            dmc.Grid(
-                children=[
-                    dmc.Col(dmc.Text(article_type,  id= f'name_{article}_{article_type}'), span=2,  className='item_type_column'),
-                    dmc.Col(dmc.Text(f"{value} DA", id=f'price_{article}_{article_type}', className='price_test'), span=4,  className='item_type_column'),
-                    dmc.Col(dmc.NumberInput( hideControls = True, value = 0, className='item_type_number_input', id=f'number_input_{article}_{article_type}'), span=2, className='item_type_column'),
-                    dmc.Col(dmc.Text(f"{0} DA", id=f'sum_{article}_{article_type}', className='price_test'), span=4,  className='item_type_column'),
-                ],
-                justify="center",
-                align="center",
-                gutter="xl",
-                className='item_type_grid'
-
-            ),
-    )
-    article_card.append(
-        dmc.Card(
-            children=[
-                dmc.CardSection(
-                    dmc.Center(  dmc.Image(src=f"assets/huile.png", width = 200))
-                  ,p = 30,
-                ),
-                dmc.Text(
-                    [
-                        dmc.Text(f"{article}",id = f'{article}', className='article_name'),
-                    ],
-                 
-                ),
-                dmc.Paper(artile_type),
-
-            ],
-            withBorder=True,
-            shadow="sm",
-            radius="md",
-            style={"width": 396},
-        )
-    )
-
+# print(dmc.TextInput(label="Your Email:", style={"width": 200}).to_plotly_json())
         
 app.layout = html.Div(
     children=[
-        dmc.ActionIcon(
+        dcc.Store(id = 'store_items_data'),
+             dmc.ActionIcon(
             DashIconify(icon="material-symbols:garden-cart", width=20),
             size="lg",
             variant="filled",
@@ -73,7 +38,15 @@ app.layout = html.Div(
             n_clicks=0,
             mb=10,
         ),
-       html.Div(article_card),
+        dmc.Text(id='void'),
+             dmc.TextInput(
+                 id = 'search_item',
+            style={"width": 380},
+            placeholder="Search",
+            rightSection=DashIconify(icon="guidance:search"),
+        ),
+   
+        html.Div(id ='test_store'),
        dcc.Store(id = 'items-in-chart', data = {}),
         dmc.Modal(
             size="55%",
@@ -85,7 +58,26 @@ app.layout = html.Div(
         ),
     ]  
 )
+@callback(
+        Output('store_items_data', 'data'),
+        Input('void', 'children'))
+def on_data_set_graph(void):
+    return data
 
+
+app.clientside_callback(
+     ClientsideFunction(
+        namespace='clientside',
+        function_name='show_dcc_stored_items'
+    ),
+    Output("test_store", "children"),
+    Input("store_items_data", "data"),
+    Input("search_item", "value"),
+    
+
+)
+    
+    
 app.clientside_callback(
      ClientsideFunction(
         namespace='clientside',
@@ -96,6 +88,8 @@ app.clientside_callback(
     prevent_initial_call=True,
 
 )
+
+
 
 @callback(
     Output("cart-modal", "opened"),
@@ -147,5 +141,7 @@ for article, value in data.items():
         product_calls_nested(article, article_type)
 
 if __name__ == "__main__":
-    app.run_server(debug=True, host='0.0.0.0', port=8050, dev_tools_ui=False)
+    app.run_server(debug=True, host='0.0.0.0', port=8050, 
+                #    dev_tools_ui=False
+                   )
 
