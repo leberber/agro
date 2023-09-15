@@ -5,39 +5,48 @@ import json
 from dash_iconify import DashIconify
 
 import random
+import pandas as pd
 
 
 app = Dash(__name__, 
            suppress_callback_exceptions=True
            )
 
-data= {
-    'sucre':{'1K':'40', '2K':'80', '5L':'150'},
-    'huile':{'1L':'140', '2L':'280', '5L':'500'},
-    # 'sucre':{'1K':'40', '2K':'80', '5L':'150'},
-    #  'tomate':{'1C':'40', '2C':'80'},
-   
-}
 
-for i in range(0,50):
-    s = random.choice(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
-    data[str(s)+'huile'+str(i)] = {'1L':'140', '2L':'280', '5L':'500'}
-print(json.dumps(data, indent=4))
+data = pd.read_csv('products.csv')
+data = data.to_dict('records')
+
+
+# data = sorted(data, key=lambda x: x['product_name'])
+
+
+# for i in range(0,50):
+#     s = random.choice(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
+#     data[str(s)+'huile'+str(i)] = {'1L':'140', '2L':'280', '5L':'500'}
+# print(json.dumps(data, indent=4))
 # print(data.__sizeof__())
 
-# print(dmc.TextInput(label="Your Email:", style={"width": 200}).to_plotly_json())
+# print(dmc.Chip('jumgo', value='jumgo').to_plotly_json())
+print(dmc.Button("Light button", variant="default", size = 'sm', radius='xl', compact=True).to_plotly_json(),)
         
 app.layout = html.Div(
     children=[
         dcc.Store(id = 'store_items_data'),
+        dcc.Store(id = 'store_categories'),
+        html.Div(id = 'pa'),
+        
+
+
+        
              dmc.ActionIcon(
             DashIconify(icon="material-symbols:garden-cart", width=20),
             size="lg",
             variant="filled",
-            id="chart-icon",
+            id="cart-icon",
             n_clicks=0,
             mb=10,
         ),
+        html.Div(id = 'filter_chips_container'),
         dmc.Text(id='void'),
              dmc.TextInput(
                  id = 'search_item',
@@ -47,22 +56,61 @@ app.layout = html.Div(
         ),
    
         html.Div(id ='test_store'),
+        dmc.Button("Load more", id = 'load_more',variant="default", size = 'sm', radius='xl', compact=True, n_clicks=0, leftIcon = dmc.Badge("23", id = 'load_more_number') ),
        dcc.Store(id = 'items-in-chart', data = {}),
         dmc.Modal(
             size="55%",
             id="cart-modal",
             zIndex=10000,
+            # opened = False,
             children=[
                 html.Div( id = 'cart-items'),
             ],
         ),
     ]  
 )
+
+
+
 @callback(
         Output('store_items_data', 'data'),
+        Output('filter_chips_container', 'children'),
         Input('void', 'children'))
 def on_data_set_graph(void):
-    return data
+
+    filters = {
+         "category": set(),
+         "provider": set()
+
+         }
+    for item in data:
+        filters["category"].add(item['category'])
+        filters["provider"].add(item['provider'])
+    filters["category"] =  list(filters["category"])
+    filters["provider"] =  list(filters["provider"])
+
+
+    chips_category  = dmc.ChipGroup(
+                children = [
+                     dmc.Chip(x, value=x) for x in  filters["category"]
+                ],
+                multiple=True,
+                id = 'filter_chips_category'
+            )
+    chips_provider  = dmc.ChipGroup(
+                children = [
+                     dmc.Chip(x, value=x) for x in  filters["provider"]
+                ],
+                multiple=True,
+                id = 'filter_chips_provider'
+            )
+
+    return data, html.Div([chips_category, chips_provider])
+
+
+
+
+
 
 
 app.clientside_callback(
@@ -71,14 +119,23 @@ app.clientside_callback(
         function_name='show_dcc_stored_items'
     ),
     Output("test_store", "children"),
+    Output("load_more_number", "children"),
+    Output("load_more", "display"),
+
+    
     Input("store_items_data", "data"),
     Input("search_item", "value"),
+    Input("filter_chips_category", "value"),
+    Input("filter_chips_provider", "value"),
+    Input("load_more", "n_clicks"),
+
+    
     
 
 )
     
     
-app.clientside_callback(
+clientside_callback(
      ClientsideFunction(
         namespace='clientside',
         function_name='show_cart_items'
@@ -89,59 +146,63 @@ app.clientside_callback(
 
 )
 
-
-
-@callback(
-    Output("cart-modal", "opened"),
-    Input("chart-icon", "n_clicks"),
+clientside_callback(
+    """function (cart_icon, open) {
+        console.log(cart_icon,  open)
+        
+        return  ! open
+    }""",
+  Output("cart-modal", "opened"),
+    Input("cart-icon", "n_clicks"),
     State("cart-modal", "opened"),
-    prevent_initial_call=True,
+     prevent_initial_call=True,
+
 )
-def modal_demo(nc3, opened):
-    return not opened
+
+
 
         
-def product_calls(article, article_type):
+def product_calls(article):
     clientside_callback(
      ClientsideFunction(
         namespace='clientside',
         function_name='update_cart_itmes'
     ),
         Output('items-in-chart','data', allow_duplicate=True),
-        Output( f'sum_{article}_{article_type}', 'children'),
+        Output( f'sum_{article}', 'children'),
        
-        Input( f'number_input_{article}_{article_type}', 'value'),
+        Input( f'number_input_card_{article}', 'value'),
 
         State( f'{article}', 'children'),
-        State( f'name_{article}_{article_type}', 'children'),
-        State( f'price_{article}_{article_type}', 'children'),
+        State( f'price_{article}', 'children'),
         State('items-in-chart', 'data'),
         prevent_initial_call =True
     )
 
-for article, value in data.items():
-    for article_type, value in value.items():
-        product_calls(article, article_type)
+for article in data:
+
+    article = article['product_code']
+    # print(article)
+    product_calls(article)
 
 
-
-
-
-def product_calls_nested(article, article_type):
-    @callback(
-        Output(f'number_input_{article}_{article_type}', 'value'),
-        Input(f"{article}_{article_type}", "value"),
+def product_calls_nested(article):
+    clientside_callback(
+        """function (value) {
+            return  value
+        }""",
+        Output(f'number_input_card_{article}', 'value'),
+        Input(f"number_input_cart_{article}", "value"),
         prevent_initial_call=True,
     )
-    def view_cart_(value):
-        return value
     
-for article, value in data.items():
-    for article_type, value in value.items():
-        product_calls_nested(article, article_type)
+for article in data:
+        article = article['product_code']
+        product_calls_nested(article)
+
 
 if __name__ == "__main__":
-    app.run_server(debug=True, host='0.0.0.0', port=8050, 
+    app.run_server(debug=True, host='0.0.0.0', port=8040, 
                 #    dev_tools_ui=False
                    )
 
