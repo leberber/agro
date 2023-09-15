@@ -28,7 +28,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
               
             }
             let filteredDataLength = filtereddata.length
-            let paginations_size = 4
+            let paginations_size = 20
             let start = load_more * paginations_size
             let end = start + paginations_size
             let remaining_items = filteredDataLength - end
@@ -40,9 +40,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
             let article_card = []
             filtereddata.forEach((article)=> {
+                console.log(`${article.product_code}.png`)
                 article_card.push(
                     {'props': {'children': [
-                        {'props': {'children': {'props': {'children': {'props': {'src': article.product_image, 'width': 200}, 'type': 'Image', 'namespace': 'dash_mantine_components'}}, 'type': 'Center', 'namespace': 'dash_mantine_components'}, 'p': 30}, 'type': 'CardSection', 'namespace': 'dash_mantine_components'},
+                        {'props': {'children': {'props': {'children': {'props': {'src': `assets/images/${article.product_code}.png`, 'width': 150, 'height' :150, 'fit':'contain'}, 'type': 'Image', 'namespace': 'dash_mantine_components'}}, 'type': 'Center', 'namespace': 'dash_mantine_components'}, 'p': 30}, 'type': 'CardSection', 'namespace': 'dash_mantine_components'},
                          {'props': {'children': [{'props': {'children': article.product_name, 'id':  article.product_code, 'className': 'article_name'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}]}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 
                          {'props': {'children': 
     

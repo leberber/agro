@@ -13,7 +13,7 @@ app = Dash(__name__,
            )
 
 
-data = pd.read_csv('products.csv')
+data = pd.read_csv('products.csv').tail(10)
 data = data.to_dict('records')
 
 
@@ -26,7 +26,12 @@ data = data.to_dict('records')
 # print(json.dumps(data, indent=4))
 # print(data.__sizeof__())
 
-# print(dmc.Chip('jumgo', value='jumgo').to_plotly_json())
+print(      dmc.Image(
+            width=200,
+            height=100,
+            withPlaceholder=True,
+            placeholder=[dmc.Loader(color="gray", size="sm").to_plotly_json()],
+        ).to_plotly_json())
 print(dmc.Button("Light button", variant="default", size = 'sm', radius='xl', compact=True).to_plotly_json(),)
         
 app.layout = html.Div(
