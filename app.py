@@ -13,7 +13,7 @@ app = Dash(__name__,
            )
 
 
-data = pd.read_csv('products.csv').tail(10)
+data = pd.read_csv('products.csv').head(6)
 data = data.to_dict('records')
 
 
@@ -26,13 +26,13 @@ data = data.to_dict('records')
 # print(json.dumps(data, indent=4))
 # print(data.__sizeof__())
 
-print(      dmc.Image(
-            width=200,
-            height=100,
-            withPlaceholder=True,
-            placeholder=[dmc.Loader(color="gray", size="sm").to_plotly_json()],
-        ).to_plotly_json())
-print(dmc.Button("Light button", variant="default", size = 'sm', radius='xl', compact=True).to_plotly_json(),)
+# print(      dmc.Image(
+#             width=200,
+#             height=100,
+#             withPlaceholder=True,
+#             placeholder=[dmc.Loader(color="gray", size="sm").to_plotly_json()],
+#         ).to_plotly_json())
+# print(dmc.Button("Light button", variant="default", size = 'sm', radius='xl', compact=True).to_plotly_json(),)
         
 app.layout = html.Div(
     children=[
@@ -118,7 +118,7 @@ def on_data_set_graph(void):
 
 
 
-app.clientside_callback(
+clientside_callback(
      ClientsideFunction(
         namespace='clientside',
         function_name='show_dcc_stored_items'
@@ -129,14 +129,11 @@ app.clientside_callback(
 
     
     Input("store_items_data", "data"),
-    Input("search_item", "value"),
+   
     Input("filter_chips_category", "value"),
     Input("filter_chips_provider", "value"),
     Input("load_more", "n_clicks"),
-
-    
-    
-
+    Input("search_item", "value"),
 )
     
     
@@ -153,7 +150,6 @@ clientside_callback(
 
 clientside_callback(
     """function (cart_icon, open) {
-        console.log(cart_icon,  open)
         
         return  ! open
     }""",
@@ -165,6 +161,24 @@ clientside_callback(
 )
 
 
+def product_calls_nested(article):
+    clientside_callback(
+        """function (value, price) {
+        console.log(price)
+            price = price.match(/\d+/)[0] 
+            return  [value, value*price]
+        }""",
+        Output(f'number_input_card_{article}', 'value'),
+          Output( f'sum_cart_{article}', 'children'),
+        
+        Input(f"number_input_cart_{article}", "value"),
+        State( f'price_cart_{article}', 'children'),
+        prevent_initial_call=True,
+    )
+    
+for article in data:
+        article = article['product_code']
+        product_calls_nested(article)
 
         
 def product_calls(article):
@@ -191,19 +205,6 @@ for article in data:
     product_calls(article)
 
 
-def product_calls_nested(article):
-    clientside_callback(
-        """function (value) {
-            return  value
-        }""",
-        Output(f'number_input_card_{article}', 'value'),
-        Input(f"number_input_cart_{article}", "value"),
-        prevent_initial_call=True,
-    )
-    
-for article in data:
-        article = article['product_code']
-        product_calls_nested(article)
 
 
 if __name__ == "__main__":

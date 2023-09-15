@@ -1,12 +1,12 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     clientside: {
 
-        show_dcc_stored_items: function (data, search, category_chips, provider_chips, load_more) {
+        show_dcc_stored_items: function (data, category_chips, provider_chips, load_more, search) {
         
            
 
             let filtereddata = data.filter((country) => country.product_name.toLowerCase().startsWith(search));
-            console.log(load_more)
+            // console.log(load_more)
             // if (filter_chips) {
             //     filtereddata = data.filter((item) => item.category == filter_chips );
             // }
@@ -28,11 +28,11 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
               
             }
             let filteredDataLength = filtereddata.length
-            let paginations_size = 20
+            let paginations_size = 2
             let start = load_more * paginations_size
             let end = start + paginations_size
             let remaining_items = filteredDataLength - end
-            console.log(start, end, filteredDataLength)
+            // console.log(start, end, filteredDataLength)
 
             
             filtereddata = filtereddata.slice(0, end)
@@ -40,7 +40,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
             let article_card = []
             filtereddata.forEach((article)=> {
-                console.log(`${article.product_code}.png`)
                 article_card.push(
                     {'props': {'children': [
                         {'props': {'children': {'props': {'children': {'props': {'src': `assets/images/${article.product_code}.png`, 'width': 150, 'height' :150, 'fit':'contain'}, 'type': 'Image', 'namespace': 'dash_mantine_components'}}, 'type': 'Center', 'namespace': 'dash_mantine_components'}, 'p': 30}, 'type': 'CardSection', 'namespace': 'dash_mantine_components'},
@@ -64,7 +63,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
 
                 }
-            return [{'props': {'children': article_card}, 'type': 'Div', 'namespace': 'dash_html_components'}, remaining_items, 'none']
+            return [{'props': {'children': article_card}, 'type': 'Div', 'namespace': 'dash_html_components'},  remaining_items, 'none']
        
      
 
@@ -74,6 +73,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             item_code = window.dash_clientside.callback_context.states_list[0]['id']
             price = price.match(/\d+/)[0] 
             if (number_input) {
+                console.log(number_input)
                 data[item_code] = {
                     'price':price,
                     'quantity':number_input,
@@ -85,22 +85,27 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
        delete data[item_code]
         
-        return [data,'0 DA']
+        return [ window.dash_clientside.no_update,'0 DA']
         
         },
 
     show_cart_items: function (data) {
-       
-        var articles = [];
+        
+        // if (Object.keys(data).length !== 0 ) {
+         
+        // }
+        // console.log(data)
+        var articles = []
         Object.entries(data).forEach(([item_name, item_order]) => {
+            
            
             articles.push(
                 {'props': {'children': [
-                    {'props': {'children': {'props': {'src': 'assets/sucre.png', 'width': 40}, 'type': 'Image', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'},
+                    {'props': {'children': {'props': {'src':  `assets/images/${item_name}.png`, 'width': 40}, 'type': 'Image', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'},
                     {'props': {'children': {'props': {'children': item_name}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 3}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
-                    {'props': {'children': {'props': {'children': item_order['price']}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+                    {'props': {'children': {'props': {'children': `${ item_order['price']} DA`, 'id': `price_cart_${ item_name}`, 'className': 'price_test'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
                     {'props': {'children': {'props': {id :`number_input_cart_${item_name}`, 'hideControls': true, 'value': item_order['quantity']},  'type': 'NumberInput', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
-                    {'props': {'children': {'props': {'children': item_order['total']}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}
+                    {'props': {'children': {'props': {'children': item_order['total'],  id:`sum_cart_${ item_name}`}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': '', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}
                 ], 
                 'align': 'center', 
                 'className': 'checkout_grids',
