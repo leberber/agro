@@ -1,25 +1,18 @@
+
+
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     clientside: {
 
-        show_dcc_stored_items: function (data, category_chips, provider_chips, load_more, search) {
-        
-           
+        show_dcc_stored_items: function (data, category_chips, provider_chips, load_more, search, items_in_cart) {
 
             let filtereddata = data.filter((country) => country.product_name.toLowerCase().startsWith(search));
-            // console.log(load_more)
-            // if (filter_chips) {
-            //     filtereddata = data.filter((item) => item.category == filter_chips );
-            // }
+           
              if (category_chips) {
                 if (category_chips.length !== 0)  {
                     filtereddata = filtereddata.filter( item => category_chips.includes( item.category ) );
                 }
             }
 
-       
-            // if (filter_chips) {
-            //     filtereddata = data.filter((item) => item.category == filter_chips );
-            // }
              if (provider_chips) {
                 if (provider_chips.length !== 0)  {
               
@@ -32,14 +25,19 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             let start = load_more * paginations_size
             let end = start + paginations_size
             let remaining_items = filteredDataLength - end
-            // console.log(start, end, filteredDataLength)
 
-            
             filtereddata = filtereddata.slice(0, end)
-            
 
             let article_card = []
             filtereddata.forEach((article)=> {
+              
+            quantity = 0
+            if (article.product_code in items_in_cart) {
+                quantity = items_in_cart[article.product_code].quantity
+    
+            }
+
+
                 article_card.push(
                     {'props': {'children': [
                         {'props': {'children': {'props': {'children': {'props': {'src': `assets/images/${article.product_code}.png`, 'width': 150, 'height' :150, 'fit':'contain'}, 'type': 'Image', 'namespace': 'dash_mantine_components'}}, 'type': 'Center', 'namespace': 'dash_mantine_components'}, 'p': 30}, 'type': 'CardSection', 'namespace': 'dash_mantine_components'},
@@ -48,7 +46,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
     
                          {'props': {'children': [
                                 {'props': {'children': {'props': {'children': `${article.price} DA`, 'id': `price_${ article.product_code}`, 'className': 'price_test'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': 'item_type_column', 'span': 4}, 'type': 'Col', 'namespace': 'dash_mantine_components'},
-                                {'props': {'children': {'props': {'id': `number_input_card_${ article.product_code}`, 'className': 'item_type_number_input', 'hideControls': true, 'value': 0}, 'type': 'NumberInput', 'namespace': 'dash_mantine_components'}, 'className': 'item_type_column', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
+                                {'props': {'children': {'props': {'id': `number_input_card_${ article.product_code}`, 'className': 'item_type_number_input', 'hideControls': true, 'value': quantity}, 'type': 'NumberInput', 'namespace': 'dash_mantine_components'}, 'className': 'item_type_column', 'span': 2}, 'type': 'Col', 'namespace': 'dash_mantine_components'}, 
                                 {'props': {'children': {'props': {'children': '0 DA', 'id': `sum_${ article.product_code}`, 'className': 'price_test'}, 'type': 'Text', 'namespace': 'dash_mantine_components'}, 'className': 'item_type_column', 'span': 4}, 'type': 'Col', 'namespace': 'dash_mantine_components'}
                             ], 'align': 'center', 'className': 'item_type_grid', 'gutter': 'xl', 'justify': 'center'}, 'type': 'Grid', 'namespace': 'dash_mantine_components'}
                         
@@ -68,28 +66,28 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
      
 
     },
-        update_cart_itmes: function (number_input, item_name, price, data) {
-       
+        update_cart_itmes: function (number_input_card, item_name, price, data) {
+            price = price.match(/\d+/)[0]
             item_code = window.dash_clientside.callback_context.states_list[0]['id']
-            price = price.match(/\d+/)[0] 
-            if (number_input) {
-                console.log(number_input)
+
+            if (number_input_card) {
+   
                 data[item_code] = {
                     'price':price,
-                    'quantity':number_input,
-                    'total': price*number_input
+                    'quantity':number_input_card,
+                    'total': price*number_input_card
                     }
-                let total = number_input*price
-               
+                let total = number_input_card*price
+            
                 return [data,  `${total.toFixed(2)} DA`]
             }
-       delete data[item_code]
-        
+
         return [ window.dash_clientside.no_update,'0 DA']
         
         },
 
     show_cart_items: function (data) {
+   
         
         // if (Object.keys(data).length !== 0 ) {
          

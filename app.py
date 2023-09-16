@@ -38,6 +38,7 @@ app.layout = html.Div(
     children=[
         dcc.Store(id = 'store_items_data'),
         dcc.Store(id = 'store_categories'),
+        dcc.Store(id= 'current_items_in_layout'),
         html.Div(id = 'pa'),
         
 
@@ -62,7 +63,8 @@ app.layout = html.Div(
    
         html.Div(id ='test_store'),
         dmc.Button("Load more", id = 'load_more',variant="default", size = 'sm', radius='xl', compact=True, n_clicks=0, leftIcon = dmc.Badge("23", id = 'load_more_number') ),
-       dcc.Store(id = 'items-in-chart', data = {}),
+       dcc.Store(id = 'items-in-chart', data = {}, #storage_type='local'
+                 ),
         dmc.Modal(
             size="55%",
             id="cart-modal",
@@ -126,6 +128,8 @@ clientside_callback(
     Output("test_store", "children"),
     Output("load_more_number", "children"),
     Output("load_more", "display"),
+    
+
 
     
     Input("store_items_data", "data"),
@@ -134,6 +138,7 @@ clientside_callback(
     Input("filter_chips_provider", "value"),
     Input("load_more", "n_clicks"),
     Input("search_item", "value"),
+    State('items-in-chart', 'data'),
 )
     
     
@@ -163,16 +168,29 @@ clientside_callback(
 
 def product_calls_nested(article):
     clientside_callback(
-        """function (value, price) {
-        console.log(price)
+        """function (value, price, data) {
+        article_code = window.dash_clientside.callback_context.inputs_list[0]['id'].replace('number_input_cart_', "")
+        console.log()
+            if (value){
+            data[article_code].quantity=value
             price = price.match(/\d+/)[0] 
-            return  [value, value*price]
+            
+                return  [value*price, data]
+                }
+                return  [0, window.dash_clientside.no_update]
+       
+      
+   
+
         }""",
-        Output(f'number_input_card_{article}', 'value'),
-          Output( f'sum_cart_{article}', 'children'),
+        Output( f'sum_cart_{article}', 'children'),
+        Output('items-in-chart','data', allow_duplicate=True),
         
         Input(f"number_input_cart_{article}", "value"),
         State( f'price_cart_{article}', 'children'),
+        State('items-in-chart', 'data'),
+   
+        
         prevent_initial_call=True,
     )
     
