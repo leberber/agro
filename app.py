@@ -170,11 +170,14 @@ def product_calls_nested(article):
     clientside_callback(
         """function (value, price, data) {
         article_code = window.dash_clientside.callback_context.inputs_list[0]['id'].replace('number_input_cart_', "")
-        console.log()
+      
             if (value){
-            data[article_code].quantity=value
+
             price = price.match(/\d+/)[0] 
-            
+            data[article_code].quantity=value
+            data[article_code].total=value*price
+
+         console.log(value*price, data)
                 return  [value*price, data]
                 }
                 return  [0, window.dash_clientside.no_update]
@@ -183,7 +186,7 @@ def product_calls_nested(article):
    
 
         }""",
-        Output( f'sum_cart_{article}', 'children'),
+        Output( f'sum_cart_{article}', 'children', allow_duplicate=True),
         Output('items-in-chart','data', allow_duplicate=True),
         
         Input(f"number_input_cart_{article}", "value"),
