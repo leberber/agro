@@ -31,11 +31,8 @@ app.layout = html.Div(
 
 
 
-def item_card(product_code, product_name, product_price, product_quantity, product_visibility):
-    visibility = {}
-    if not product_visibility:
-         visibility =   {}
- 
+def item_card(product_code, product_name, product_price, product_quantity):
+
 
     return dmc.Group(
             children=[
@@ -46,7 +43,7 @@ def item_card(product_code, product_name, product_price, product_quantity, produ
             
             ],
          
-            style=visibility
+
 )
 
 
@@ -78,36 +75,63 @@ data = [
 def on_data_set_graph(product_povider, items_pushed_to_cart):
 
     output  = []
-    
+
+    filtered_data = []
+    filtered_data_ids = []
+    items_in_cart_and_filtered_data = []
+    items_in_cart_not_in_filtered_data = []
+    not_in_cart_and_filtered_data = []
     for item in data:
-        if  item['product_code'] in items_pushed_to_cart:
-            product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity']
-            if item['provider'] != product_povider:
-                product_visibility=True
-                
-            else:
-                product_visibility=True
+        product_code = item['product_code']
+        _product_provider = item['provider']
+        if  product_code in items_pushed_to_cart and  _product_provider == product_povider:
+            items_in_cart_and_filtered_data.append(item)
+        elif product_code in items_pushed_to_cart and  _product_provider != product_povider:
+            items_in_cart_not_in_filtered_data.append(item)
+        elif product_code not in items_pushed_to_cart and  _product_provider == product_povider:
+            not_in_cart_and_filtered_data.append(item)
 
-            output.append(
-                        item_card(
-                        item['product_code'],  
-                        item['product_name'][:20],
-                        item['price'],
-                        product_quantity,
-                        product_visibility)
-                )
-
-        elif item['provider'] == product_povider:
-            product_visibility='output'
-            product_quantity = 0
-            output.append(
+    # for i in items_in_cart_not_in_filtered_data:
+        
+    #     print(i)
+    product_quantity = 0
+    for item in not_in_cart_and_filtered_data:
+        print(item, 'filted')
+       
+        output.append(
                     item_card(
                     item['product_code'],  
                     item['product_name'][:20],
                     item['price'],
                     product_quantity,
-                    product_visibility)
+                   )
             )
+        
+
+    for item in items_in_cart_and_filtered_data:
+        print(item, 'filted')
+        product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity']
+        output.append(
+                    item_card(
+                    item['product_code'],  
+                    item['product_name'][:20],
+                    item['price'],
+                    product_quantity,
+                   )
+            )
+        
+    for item in items_in_cart_not_in_filtered_data:
+              product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity']
+              output.append(
+                        item_card(
+                        item['product_code'],  
+                        item['product_name'][:20],
+                        item['price'],
+                        product_quantity,
+                       )
+                )
+   
+
 
     return output
 

@@ -13,8 +13,9 @@ app = Dash(__name__,
            )
 
 
-data = pd.read_csv('products.csv').head(6)
+data = pd.read_csv('products.csv').tail()
 data = data.to_dict('records')
+print(data)
 
 
 # data = sorted(data, key=lambda x: x['product_name'])
@@ -168,32 +169,19 @@ clientside_callback(
 
 def product_calls_nested(article):
     clientside_callback(
-        """function (value, price, data) {
+        """function (value, data) {
         article_code = window.dash_clientside.callback_context.inputs_list[0]['id'].replace('number_input_cart_', "")
-      
-            if (value){
-
-            price = price.match(/\d+/)[0] 
-            data[article_code].quantity=value
-            data[article_code].total=value*price
-
-         console.log(value*price, data)
-                return  [value*price, data]
-                }
-                return  [0, window.dash_clientside.no_update]
+        console.log(value, data)
+        return window.dash_clientside.no_update
        
       
    
 
         }""",
-        Output( f'sum_cart_{article}', 'children', allow_duplicate=True),
         Output('items-in-chart','data', allow_duplicate=True),
         
         Input(f"number_input_cart_{article}", "value"),
-        State( f'price_cart_{article}', 'children'),
         State('items-in-chart', 'data'),
-   
-        
         prevent_initial_call=True,
     )
     
@@ -233,3 +221,29 @@ if __name__ == "__main__":
                 #    dev_tools_ui=False
                    )
 
+
+   
+        #     if (value){
+      
+        #        console.log(value, 'inside', typeof(value),  typeof(0))
+
+        #     price = price.match(/\d+/)[0] 
+        #     data[article_code].quantity=value
+        #     data[article_code].total=value*price
+         
+
+        # //  console.log(value*price, data)
+        #         return  [value*price, data]
+        #         }
+
+        #     if (value ==1) {
+        #     console.log('if 0')
+        #       data[article_code].quantity=value
+        #         data[article_code].total=value*1
+              
+        #         delete data.article_code;
+        #         console.log(value, '0',  data, article_code)
+               
+        #          return  [90, data]
+             
+        #      }
