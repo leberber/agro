@@ -1,115 +1,29 @@
-@app.callback(
-        Output('containier', 'children'),
-        Input('product_povider', 'value'),
-        State("items_pushed_to_cart", "data"),
-     
-        )
+import dash_mantine_components as dmc
+from dash import Dash
 
+app = Dash(
+    __name__,
+    external_stylesheets=[
+        # include google fonts
+        "https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;900&display=swap"
+    ],
+)
 
-def on_data_set_graph(product_povider, items_pushed_to_cart):
+app.layout = dmc.MantineProvider(
+    theme={
+        "fontFamily": "'Inter', sans-serif",
+        "primaryColor": "indigo",
+        "components": {
+            "Button": {"styles": {"root": {"fontWeight": 400}}},
+            "Alert": {"styles": {"title": {"fontWeight": 500}}},
+            "AvatarGroup": {"styles": {"truncated": {"fontWeight": 500}}},
+        },
+    },
+    inherit=True,
+    withGlobalStyles=True,
+    withNormalizeCSS=True,
+    children=[...],
+)
 
-    visible  = []
-    hidden = []
-
-    filtered_data = []
-    filtered_data_ids = []
-    for item in data:
-        filtered_data_ids.append(item['product_code'])
-        if item['provider'] != product_povider:
-            filtered_data.append(item)
-    print(filtered_data_ids)
-
-
-    
-    
-    for item in filtered_data:
- 
-        if  item['product_code'] in items_pushed_to_cart:
-            product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity']
-        else:
-            product_quantity = 0
-
-
-        visible.append(
-                    item_card(
-                    item['product_code'],  
-                    item['product_name'][:20],
-                    item['price'],
-                    product_quantity,
-                    "product_visibility")
-            )
-        
-    for item in items_pushed_to_cart:
-        print(item)
-
-        if item in filtered_data_ids:
-            hidden.append(
-                    item_card(
-                    item['product_code'],  
-                    item['product_name'][:20],
-                    item['price'],
-                    product_quantity,
-                    "product_visibility")
-            )
-
-
-        # elif item['provider'] == product_povider:
-        #     product_visibility='output'
-        #     product_quantity = 0
-        #     hidden.append(
-        #             item_card(
-        #             item['product_code'],  
-        #             item['product_name'][:20],
-        #             item['price'],
-        #             product_quantity,
-        #             product_visibility)
-        #     )
-
-    return html.Div([html.Div(visible), html.Div(hidden)])
-
-
-
-    
-@app.callback(
-        Output('containier', 'children'),
-        Input('product_povider', 'value'),
-        State("items_pushed_to_cart", "data"),
-     
-        )
-
-
-def on_data_set_graph(product_povider, items_pushed_to_cart):
-
-    output  = []
-    
-    for item in data:
-        if  item['product_code'] in items_pushed_to_cart:
-            product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity']
-            if item['provider'] != product_povider:
-                product_visibility=True
-                
-            else:
-                product_visibility=True
-
-            output.append(
-                        item_card(
-                        item['product_code'],  
-                        item['product_name'][:20],
-                        item['price'],
-                        product_quantity,
-                        product_visibility)
-                )
-
-        elif item['provider'] == product_povider:
-            product_visibility='output'
-            product_quantity = 0
-            output.append(
-                    item_card(
-                    item['product_code'],  
-                    item['product_name'][:20],
-                    item['price'],
-                    product_quantity,
-                    product_visibility)
-            )
-
-    return output
+if __name__ == "__main__":
+    app.run_server()

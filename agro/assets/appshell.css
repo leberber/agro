@@ -1,0 +1,32 @@
+:root {
+    --header-height:  44px
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.header {
+    padding: 8px;
+    z-index: 20;
+    height: 45px;
+    position: fixed;
+    top:0;
+    width: 450px; /* to be changed to 100% or rihgt 0*/
+    box-shadow: 0px 4px 3px -3px rgba(0, 0, 0, 0.05); 
+}
+
+.footer {
+    position: fixed;
+    padding: 8px 15px 0 15px;
+    bottom:0;
+    width: 450px;
+    height: 70px;
+    box-shadow: inset 0px 4px 3px -3px rgba(0, 0, 0, 0.05);
+}
+
+.footer .mantine-Text-root{
+    padding: 0px !important;
+   
+}
