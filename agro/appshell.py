@@ -1,10 +1,7 @@
-            
 import dash_mantine_components as dmc
 from dash import html
 from dash_iconify import DashIconify as icon
 from utils import id_dict
-
-
 
 footer_icon_with = 30
 footer_icon_color = '#A519C7'
@@ -44,8 +41,7 @@ footer  = dmc.Paper(
                 footer_action_link ("page_switcher_action", "account", 'ic:sharp-person-outline'),
                 footer_action_link ("page_switcher_action", "cart", 'ic:outline-shopping-cart')
             ]
-        ),
-        
+        ), 
     ]
 )
 
@@ -60,7 +56,7 @@ header = dmc.Paper(
             style= {'float':'right'},
             children = [
                 icon(icon="ic:baseline-light-mode", width=40, color='gold')
-                ]
+            ]
         )
     ]
 )

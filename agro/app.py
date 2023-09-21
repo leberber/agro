@@ -14,61 +14,79 @@ app = Dash(
         "https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;900&display=swap"
     ],
 )
-shop = dmc.Paper(
-    id = id_dict('page_layout_id', 'shop'),
-    style = {'display':'block'},
-    className = 'page' ,
-    children = [
-        dmc.Grid(
-            # w = '100%',
-            # position = 'apart',
+
+def shop_card(image_path):
+    return dmc.Grid(
+            className = 'card-grid',
             justify = 'center',
-            # style ={'border':'2px solid red'},
+            
             children = [
                 dmc.Col(
-                    span = 2,
-                    # style ={'border':'2px solid red'},
-                    p = 0,
+                className = 'card-image-column',
+                p = 5,
+                    span = 3,
                     children = [
-                        dmc.Image(src="/assets/Confitures_MATINA_Abricot.png",    width =  '100%', height = '100%' ),
+                        dmc.Image(src=image_path, className = 'card-image')  
                     ]
                 ),
                 dmc.Col(
                     span = 'auto',
-                    # style ={'border':'1px solid green'},
                     children = [
-                        dmc.Paper(
-                            # style ={'border':'1px solid yellow'},
-                            pos='relative',
-                            children = [
-                                dmc.Text("Confiture Matina Abricot", size="sm"),
-                                dmc.Text("167.24 DA", size="sm", color ='red', pos='absolute', right=0, top = 0),
-                                dmc.Group(
-                                    children = [
+                        dmc.Grid(
+                            children=[
+                                dmc.Col(dmc.Text("Confiture Matina Abricot", size="lg", weight=500,), span=7, px = 0),
+                                dmc.Col(dmc.Text("1687.24 DA", size="md", weight=900, align="right" , color = 'green'), span=5,  px = 0),
+                            ],
+                        ),
+                        dmc.Grid(
+                            justify = 'flex-end',
+                            children=[
+                                dmc.Col( 
+                                span=4, px = 0,
+                                    children =[
                                         dmc.Stack(
                                             align="center",
                                             children = [
-                                                dmc.Text("0", size="md", color ='red'),
-                                                dmc.Text("Quantity", size="xs"),
+                                                dmc.NumberInput(min=0, w = 50, size = 'lg', hideControls =  True, className='card-quantity-input'),
+                                                dmc.Text("Quantity", size="md", weight=600, align="right" ),
 
                                             ]
-                                        ),
+                                        ) 
+                                    ]
+                                ),
+                                dmc.Col(    
+                                    span=5, px = 0,
+                                    children =[
                                         dmc.Stack(
                                             align="center",
                                             children = [
-                                                dmc.Text("0", size="md", color ='red'),
-                                                dmc.Text("Total", size="xs"),
+                                                dmc.Text("0 DA", size="md", lh = '30px', weight='bolder'),
+                                                dmc.Text("Total", size="md", weight=600, align="right" ),                                               
 
                                             ]
                                         )
                                     ]
                                 )
                             ]
-                        )
+                        ),
                     ]
                 )
             ]
         )
+shop = dmc.Paper(
+    id = id_dict('page_layout_id', 'shop'),
+    style = {'display':'block'},
+    className = 'page',
+
+    children = [
+        shop_card("/assets/Ramy_Délice.png" ), 
+        shop_card("/assets/Ramy_Délice300_360.jpg" ), 
+        shop_card("/assets/Ramy_Délice300_420.jpg" ), 
+        shop_card("/assets/Ramy_Délice_300_500.jpg" ), 
+        shop_card("/assets/Confitures_MATINA_Abricot.png" ), 
+        shop_card("/assets/Couscous_Gros_300_300.png" ), 
+        shop_card("/assets/Couscous_Gros2.png" ), 
+
     ]
 )
 
@@ -108,7 +126,6 @@ content = dmc.Container(
 )
    
 app.layout = html.Div(
-    style={"height": 930, "width": 450, 'border': '2px solid red', 'overflow':'scroll'},
     children=[  
         dmc.MantineProvider(
             theme={"primaryColor": "indigo"},
@@ -127,28 +144,6 @@ app.layout = html.Div(
     ]
 )
 
-@app.callback(
-    Output({"type": "page_layout_id", "index": ALL}, "style"), 
-    Output({"type": "page_switcher_action", "index": ALL}, "style"),
-    Output({"type": "page_switcher_action_text", "index": ALL}, "style"),
-    Input({"type": "page_switcher_action", "index": ALL}, "n_clicks"),
-    prevent_initial_call=True
-)
-
-def page_switcher(action_click):
-    print(ctx.outputs_list[0])
-    triggered_input = ctx.triggered_id['index']
-    output_list = [i['id']['index'] for i in ctx.outputs_list[0]]
-    print(output_list)
-    number_of_outputs, triggered_input_index = len(output_list), output_list.index(triggered_input)
-    page_output_list = [{'display':'none'}] * number_of_outputs
-    action_item_output_list = [{}] * number_of_outputs
-    page_output_list[triggered_input_index] = {'display':'block'}
-    action_item_output_list[triggered_input_index] = {'color':'rgb(34, 139, 230)'}
-
-    return page_output_list, action_item_output_list, action_item_output_list
-
-
 clientside_callback(
     ClientsideFunction(
         namespace='clientside',
@@ -161,9 +156,6 @@ clientside_callback(
     prevent_initial_call=True
 )
 
-
-# print(icon(icon="iconamoon:mode-light-light", width=20).to_plotly_json())
-
 clientside_callback(
     ClientsideFunction(
         namespace='clientside',
@@ -171,23 +163,9 @@ clientside_callback(
     ),
     Output("theme", "theme"),
     Output("theme_switcher", "children"),
-    # Output("papertest", "className"),
     Input("theme_switcher", "n_clicks"),
     prevent_initial_call=True
 )
-
-# clientside_callback(
-#     ClientsideFunction(
-#         namespace='clientside',
-#         function_name='page_switcher'
-#     ),
-#     Output("shop_page", "style"),
-#     Output("account_page", "style"),
-#     Output("cart_page", "style"),
-#     Input("theme_switcher", "n_clicks"),
-#     prevent_initial_call=True
-# )
-
 
 if __name__ == "__main__":
     app.run_server(debug=True, host='0.0.0.0', port=8050 )
