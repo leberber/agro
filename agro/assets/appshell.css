@@ -1,5 +1,5 @@
 :root {
-    --header-height:  44px
+    --header-height:  45px
 }
 
 body {
@@ -8,9 +8,9 @@ body {
 }
 
 .header {
-    padding: 8px;
+    padding: 10px;
     z-index: 20;
-    height: 45px;
+    height: var(--header-height);
     position: fixed;
     top:0;
     width: 450px; /* to be changed to 100% or rihgt 0*/
@@ -28,5 +28,22 @@ body {
 
 .footer .mantine-Text-root{
     padding: 0px !important;
-   
+}
+
+.content {
+    margin-top:var(--header-height) ;
+}
+
+.test{
+    background-color: red;
+}
+
+
+@keyframes FadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
 }
