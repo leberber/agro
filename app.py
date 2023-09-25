@@ -344,16 +344,80 @@ def item_card_add_item(card_item_quantity):
                 }
 
     cart_items = []
+    
+    header =    dmc.Grid(
+        
+            m = 0,
+            align ='center',
+                children=[
+                    dmc.Col(
+                        span=2,
+                        
+                        children = [
+                           dmc.Text('', className='cart-items-headers')
+                        ]
+                    ),
+                    dmc.Col(
+                        span=6,
+                        children = [
+                             dmc.Text('Produit', className='cart-items-headers')
+                        ]
+                    ),
+                    dmc.Col(
+                        span=2,
+                        children = [
+                             dmc.Text('Quantity', className='cart-items-headers')
+                        ]
+                    ),        
+                    dmc.Col(
+                        span=2,
+                        children = [
+                             dmc.Text('Total', className='cart-items-headers', ta = 'center')
+                        ]
+                    )
+
+                ]
+            )
+    cart_items.append(header)
     for _, item in items_pushed_to_cart.items():
+        product_code= item['product_code']
         cart_items.append(
-            dmc.Group(
-                children = [ 
-                    dmc.Text(item['product_code'][:20], miw = 150), 
-                    dmc.NumberInput(id={"type": "cart_item_quantity", "index": item['product_code']}, value = item['item_quantity'], min=0),
-                    dmc.Text( 0, id={"type": "cart_item_total", "index":item['product_code']}) 
+            dmc.Grid(
+          
+            m = 0,
+            align ='center',
+                children=[
+                    dmc.Col(
+                        span=2,
+                        children = [
+                            dmc.Image(src= f'/assets/images/{product_code}.png',  height = 20, fit = 'contain')  
+                        ]
+                    ),
+                    dmc.Col(
+                        span=6,
+                        children = [
+                            dmc.Text(product_code, maw = 150, size = 'xs')
+                        ]
+                    ),
+                    dmc.Col(
+                        span=2,
+                        children = [
+                            dmc.NumberInput(id={"type": "cart_item_quantity", "index": item['product_code']}, value = item['item_quantity'],hideControls =  True, className='cart-quantity-input'
+                                            # min=0, w = 40, h = 30, mih = 20, size = 'sm',className='cart-quantity-input'
+                                            )
+                        ]
+                    ),        
+                    dmc.Col(
+                        span=2,
+                        children = [
+                            dmc.Text( 0, id={"type": "cart_item_total", "index":item['product_code']}, style = {'float':'right'}, size = 'xs') 
+                        ]
+                    )
+
                 ]
             )
         )
+
  
     return items_pushed_to_cart, html.Div(cart_items)
     
