@@ -31,7 +31,7 @@ def shop_card(product_name, product_code, product_price,  product_quantity, imag
                 p = 5,
                     span = 3,
                     children = [
-                        dmc.Image(src=image_path, className = 'card-image')  
+                        dmc.ActionIcon(dmc.Image(src=image_path, className = 'card-image') , style = {'width':'100%', 'height':'100%'}, id={"type": "card_image_action", "index":product_code}) 
                     ]
                 ),
                 dmc.Col(
@@ -52,7 +52,7 @@ def shop_card(product_name, product_code, product_price,  product_quantity, imag
                                         dmc.Stack(
                                             align="center",
                                             children = [
-                                                dmc.NumberInput(min=0, w = 50, h = 30, mih = 20, size = 'lg', hideControls =  True, className='card-quantity-input', value = product_quantity, id={"type": "card_item_quantity", "index": product_code}),
+                                                dmc.NumberInput(min=0, w = 50, h = 30, mih = 20, size = 'lg', hideControls =  True, className='card-quantity-input', value = product_quantity, id={"type": "card_item_quantity", "index": product_code}, placeholder=0),
                                                 dmc.Text("Quantity", size="md", weight=600, align="right" ),
 
                                             ]
@@ -96,11 +96,7 @@ shop = dmc.Paper(
             rightSection=icon(icon="guidance:search"),
         ),
         dmc.Container(id = 'products_container'),
-        # shop_card("/assets/images/Ramy_Délice.png" ), 
-        # shop_card("/assets/images/Couscous_Fin.png" ), 
-        # shop_card("/assets/images/Smen_MEDINA.png" ), 
-        # shop_card("/assets/images/Sucre_Blanc_Raffiné.png" ), 
-        # shop_card("/assets/images/Mayonnaise_Ail_et_Fines_Herbes.png" ), 
+
 
 
 
@@ -121,6 +117,8 @@ account = dmc.Paper(
 )
 
 cart = dmc.Paper(
+    m = 0,
+    p = 0,
     id = id_dict('page_layout_id', 'cart'),
     style = {'display':'none'},
     className = 'page',
@@ -135,6 +133,13 @@ content = dmc.Container(
         shop,
         account,
         cart,
+         dmc.Drawer(
+            id="drawer-position",
+            zIndex=10000,
+            position = 'bottom',
+            size="65%",
+            withCloseButton=False
+        ),
     ]
 )
    
@@ -220,7 +225,7 @@ def on_data_set_graph(product_povider, items_pushed_to_cart, _data):
             not_in_cart_and_filtered_data.append(item)
 
 
-    product_quantity = 0
+    product_quantity = None
     for item in not_in_cart_and_filtered_data + items_in_cart_and_filtered_data:
         product_code = item['product_code']
         if item in items_in_cart_and_filtered_data:
@@ -286,11 +291,6 @@ def item_card_add_item(card_item_quantity,item_price ):
 
 def stored_items(card_item_quantity, cart_item_quantity):
 
-    if  not card_item_quantity:
-        card_item_quantity = 0
-
-    if  not cart_item_quantity:
-        cart_item_quantity = 0
 
     if ctx.triggered_id['type'] =='card_item_quantity':
         return  card_item_quantity, card_item_quantity
@@ -324,16 +324,18 @@ clientside_callback(
 
 
 
-
 @callback(
         Output("items_pushed_to_cart", "data"),
         Output('cart-items', 'children'),
         Input({"type": "card_item_quantity", "index": ALL}, "value"),
+        Input({"type": "page_switcher_action", "index": ALL}, "n_clicks"),
+        Input({"type": "x_out_from_cart", "index": ALL}, "n_clicks"),
+        State("items_pushed_to_cart", "data"),
         prevent_initial_call=True,
 )
 
-def item_card_add_item(card_item_quantity):
-    items_pushed_to_cart ={}
+def item_card_add_item(cart_click, x_click, card_item_quantity, items_pushed_to_cart):
+
     for item in ctx.inputs_list[0]:
         item_quantity = item.get("value")
         item_id = item['id']['index']
@@ -342,11 +344,14 @@ def item_card_add_item(card_item_quantity):
                     'product_code':item_id,
                     'item_quantity': item_quantity,
                 }
-
+    if ctx.triggered_id['type'] == 'x_out_from_cart':
+        items_pushed_to_cart[ctx.triggered_id['index']][ 'item_quantity'] = 0
     cart_items = []
+
+    if ctx.triggered_id['type'] == 'card_item_quantity':
+        return items_pushed_to_cart, no_update
     
     header =    dmc.Grid(
-        
             m = 0,
             align ='center',
                 children=[
@@ -381,36 +386,56 @@ def item_card_add_item(card_item_quantity):
     cart_items.append(header)
     for _, item in items_pushed_to_cart.items():
         product_code= item['product_code']
+        product_quantity = item['item_quantity']
+        if product_quantity ==0:
+            style = {'display':'none'}
+        else:
+            style = {}
         cart_items.append(
             dmc.Grid(
-          
+              style=style,
             m = 0,
             align ='center',
                 children=[
                     dmc.Col(
                         span=2,
+                      
                         children = [
-                            dmc.Image(src= f'/assets/images/{product_code}.png',  height = 20, fit = 'contain')  
+                            dmc.Image(src= f'/assets/images/{product_code}.png',  height = 30, fit = 'contain')  
                         ]
                     ),
                     dmc.Col(
                         span=6,
                         children = [
-                            dmc.Text(product_code, maw = 150, size = 'xs')
+                            dmc.Text(product_code[:40], maw = 150, size = 'sm')
                         ]
                     ),
                     dmc.Col(
                         span=2,
                         children = [
-                            dmc.NumberInput(id={"type": "cart_item_quantity", "index": item['product_code']}, value = item['item_quantity'],hideControls =  True, className='cart-quantity-input'
+                            dmc.NumberInput(id={"type": "cart_item_quantity", "index": item['product_code']}, value = product_quantity, hideControls =  True, className='cart-quantity-input'
                                             # min=0, w = 40, h = 30, mih = 20, size = 'sm',className='cart-quantity-input'
                                             )
                         ]
                     ),        
                     dmc.Col(
                         span=2,
+                         pos = 'relative',
                         children = [
-                            dmc.Text( 0, id={"type": "cart_item_total", "index":item['product_code']}, style = {'float':'right'}, size = 'xs') 
+                            dmc.Text( 0, id={"type": "cart_item_total", "index":item['product_code']}, style = {'float':'right'}, 
+                                     size = 'sm'),
+                                   dmc.ActionIcon(
+                                id={"type": "x_out_from_cart", "index":item['product_code']},
+                                variant='transparent',  
+                                pos = 'absolute',
+                                top = '-10px',
+                                right= '-10px',
+
+                            
+                                children = [
+                                   icon(icon="ph:x-light", width=15),
+                                ]
+                            ),
                         ]
                     )
 
@@ -418,9 +443,20 @@ def item_card_add_item(card_item_quantity):
             )
         )
 
- 
+    print(items_pushed_to_cart)
     return items_pushed_to_cart, html.Div(cart_items)
     
+
+
+@callback(
+    Output("drawer-position", "opened"),
+    Input({"type": "card_image_action", "index": ALL}, "n_clicks"),
+    prevent_initial_call=True,
+)
+def toggle_drawer(n_clicks):
+    if any(n_clicks):
+        return True
+    return False
 
 
 if __name__ == "__main__":

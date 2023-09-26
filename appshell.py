@@ -42,7 +42,7 @@ footer  = dmc.Paper(
                 footer_action_link ("page_switcher_action", "account", 'ic:sharp-person-outline'),
                 footer_action_link ("page_switcher_action", "cart", 'ic:outline-shopping-cart')
             ]
-        ), 
+        )
     ]
 )
 
