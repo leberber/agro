@@ -48,6 +48,19 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
        
   
             return [page_output_list, action_item_output_list, action_item_output_list];
+        },
+
+        make_cards: function(product_povider, items_pushed_to_cart, _data){
+            
+            let visible  = []
+            let hidden = []
+            let items_in_cart_and_filtered_data = []
+            let items_in_cart_not_in_filtered_data = []
+            let not_in_cart_and_filtered_data = []
+
+            
+           
+
         }
         
 
