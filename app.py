@@ -208,6 +208,7 @@ def on_data_set_graph(void):
     )
 
 def on_data_set_graph(product_povider, items_pushed_to_cart, _data):
+    print(items_pushed_to_cart)
     visible  = []
     hidden = []
     items_in_cart_and_filtered_data = []
@@ -227,6 +228,7 @@ def on_data_set_graph(product_povider, items_pushed_to_cart, _data):
 
     product_quantity = None
     for item in not_in_cart_and_filtered_data + items_in_cart_and_filtered_data:
+
         product_code = item['product_code']
         if item in items_in_cart_and_filtered_data:
             product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity']
@@ -339,7 +341,10 @@ def item_card_add_item(cart_click, x_click, card_item_quantity, items_pushed_to_
     for item in ctx.inputs_list[0]:
         item_quantity = item.get("value")
         item_id = item['id']['index']
-        if item_quantity: 
+        # if item_quantity ==0:
+        #     del items_pushed_to_cart[item_id]
+        if item_quantity or item_quantity ==0: 
+            print(item_quantity)
             items_pushed_to_cart[item_id] = {
                     'product_code':item_id,
                     'item_quantity': item_quantity,
@@ -349,6 +354,7 @@ def item_card_add_item(cart_click, x_click, card_item_quantity, items_pushed_to_
     cart_items = []
 
     if ctx.triggered_id['type'] == 'card_item_quantity':
+        print('all',items_pushed_to_cart)
         return items_pushed_to_cart, no_update
     
     header =    dmc.Grid(
@@ -443,7 +449,7 @@ def item_card_add_item(cart_click, x_click, card_item_quantity, items_pushed_to_
             )
         )
 
-    print(items_pushed_to_cart)
+
     return items_pushed_to_cart, html.Div(cart_items)
     
 
