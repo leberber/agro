@@ -519,3 +519,115 @@ def toggle_drawer(n_clicks):
 if __name__ == "__main__":
     app.run_server(debug=True, host='0.0.0.0', port=8050 )
 
+#     // Assuming you have imported necessary modules and defined variables like `card_item_quantity` and `cart_item_quantity`
+
+# // Define the client-side callback
+# app.clientside_callback(
+#     """
+#     function(card_item_quantity, cart_item_quantity) {
+#         if(card_item_quantity !== undefined) {
+#             return card_item_quantity;
+#         } else if(cart_item_quantity !== undefined) {
+#             return cart_item_quantity;
+#         } else {
+#             return null;
+#         }
+#     }
+#     """,
+#     Output({"type": "card_item_quantity", "index": MATCH}, "value"),
+#     Output({"type": "cart_item_quantity", "index": MATCH}, "value"),
+#     Input({"type": "card_item_quantity", "index": MATCH}, "value"),
+#     Input({"type": "cart_item_quantity", "index": MATCH}, "value")
+# );
+
+# app.clientside_callback(
+#     """
+#     function itemCardAddItem(cartClick, xClick, cardItemQuantity, itemsPushedToCart, itemsPushedToCartPrev) {
+#         // Assuming ctx and dmc are defined as global variables
+#         for (var i = 0; i < cardItemQuantity.length; i++) {
+#             var item = cardItemQuantity[i];
+#             var itemQuantity = item.value;
+#             var itemID = item.id.index;
+            
+#             if (itemQuantity || itemQuantity === 0) {
+#                 itemsPushedToCart[itemID] = {
+#                     product_code: itemID,
+#                     item_quantity: itemQuantity
+#                 };
+#             }
+#         }
+        
+#         if (xClick.some(Boolean)) {
+#             var xOutIndex = xClick.findIndex(Boolean);
+#             itemsPushedToCart[xOutIndex].item_quantity = 0;
+#         }
+        
+#         var cartItems = [];
+        
+#         if (cartClick.some(Boolean)) {
+#             // Assuming 'ctx' and 'dmc' are defined as global variables
+#             console.log('all', itemsPushedToCart);
+#             return [itemsPushedToCart, null];
+#         }
+        
+#         // Rest of your code to build 'cartItems' goes here
+        
+#         return [itemsPushedToCart, cartItems];
+#     }
+#     """,
+#     Output("items_pushed_to_cart", "data"),
+#     Output('cart-items', 'children'),
+#     Input({"type": "card_item_quantity", "index": ALL}, "value"),
+#     Input({"type": "page_switcher_action", "index": ALL}, "n_clicks"),
+#     Input({"type": "x_out_from_cart", "index": ALL}, "n_clicks"),
+#     State("items_pushed_to_cart", "data"),
+#     State("items_pushed_to_cart", "data_previous"),
+#     prevent_initial_call=True
+# )
+
+# Assuming 'app' is your Dash app instance
+
+# app.clientside_callback(
+#     """
+#     function(card_item_quantity, page_switcher_action, x_out_from_cart, items_pushed_to_cart) {
+#         // This is the client-side callback function
+        
+#         // Initialize items_pushed_to_cart if it's undefined
+#         if (items_pushed_to_cart === undefined) {
+#             items_pushed_to_cart = {};
+#         }
+
+#         // Loop through card_item_quantity
+#         for (var i = 0; i < card_item_quantity.length; i++) {
+#             var item = card_item_quantity[i];
+#             var item_quantity = item.value;
+#             var item_id = item.id.index;
+
+#             if (item_quantity || item_quantity === 0) {
+#                 console.log(item_quantity);
+#                 items_pushed_to_cart[item_id] = {
+#                     'product_code': item_id,
+#                     'item_quantity': item_quantity,
+#                 };
+#             }
+#         }
+
+#         // Add code for page_switcher_action and x_out_from_cart if needed
+
+#         // Define cart_items
+#         var cart_items = [];
+
+#         // Add code to generate cart_items
+
+#         // Return the updated items_pushed_to_cart and cart_items
+#         return [items_pushed_to_cart, cart_items];
+#     }
+#     """,
+#     Output("items_pushed_to_cart", "data"),
+#     Output("cart-items", "children"),
+#     Input({"type": "card_item_quantity", "index": ALL}, "value"),
+#     Input({"type": "page_switcher_action", "index": ALL}, "n_clicks"),
+#     Input({"type": "x_out_from_cart", "index": ALL}, "n_clicks"),
+#     State("items_pushed_to_cart", "data"),
+#     prevent_initial_call=True
+# )
