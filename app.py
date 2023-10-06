@@ -17,6 +17,8 @@ app = Dash(
     ],   
 )
 
+server = app.server
+
 
 data = pd.read_csv('products.csv')
 
@@ -121,14 +123,7 @@ app.layout = html.Div(
     ]
 )
 
-@callback(
-    Output("void","children"),
-    Input("product_povider","value")
-)
-def set_product_category_options(data):
-    print(data)
 
-    return no_update
 
 clientside_callback(
     """
