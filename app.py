@@ -17,6 +17,7 @@ app = Dash(
     ],   
 )
 
+
 server = app.server
 
 
@@ -53,7 +54,7 @@ shop = dmc.Paper(
             rightSection=icon(icon="guidance:search"),
         ),
         dmc.Container(id = 'products_container'),
-        dmc.Button("Load more", id = 'load_more',variant="default", size = 'sm', radius='xl', compact=True, n_clicks=0, leftIcon = dmc.Badge("23", id = 'load_more_number') ),
+        dmc.Center(dmc.Button("Load more", id = 'load_more',variant="default", size = 'sm', radius='xl', compact=True, n_clicks=0, leftIcon = dmc.Badge("23", id = 'load_more_number') ), pt=5)
 
 
 
