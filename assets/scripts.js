@@ -1,4 +1,5 @@
 // ctx = window.dash_clientside.callback_context;
+
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
    
     clientside: {
@@ -50,171 +51,194 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             return [page_output_list, action_item_output_list, action_item_output_list];
         },
 
-        make_cards: function(product_provider, items_pushed_to_cart, _data){
-            function shop_card(product_name, product_code, product_price,  product_quantity, image_path) {
-                return  {'namespace': 'dash_mantine_components',
-                'props': {'children': [{'namespace': 'dash_mantine_components',
-                                        'props': {'children': [{'namespace': 'dash_mantine_components',
-                                                                'props': {'children': {'namespace': 'dash_mantine_components',
-                                                                                        'props': {'className': 'card-image',
-                                                                                                'src': image_path},
-                                                                                        'type': 'Image'},
-                                                                        'id': {'index': product_code,
-                                                                                'type': 'card_image_action'},
-                                                                        'style': {'height': '100%',
-                                                                                    'width': '100%'}},
-                                                                'type': 'ActionIcon'}],
-                                                'className': 'card-image-column',
-                                                'p': 5,
-                                                'span': 3},
-                                        'type': 'Col'},
-                                        {'namespace': 'dash_mantine_components',
-                                        'props': {'children': [{'namespace': 'dash_mantine_components',
-                                                                'props': {'children': [{'namespace': 'dash_mantine_components',
-                                                                                        'props': {'children': {'namespace': 'dash_mantine_components',
-                                                                                                                'props': {'children':  product_name,
-                                                                                                                        'size': 'lg',
-                                                                                                                        'weight': 500},
-                                                                                                                'type': 'Text'},
-                                                                                                'px': 0,
-                                                                                                'span': 7},
-                                                                                        'type': 'Col'},
-                                                                                        {'namespace': 'dash_mantine_components',
-                                                                                        'props': {'children': {'namespace': 'dash_mantine_components',
-                                                                                                                'props': {'align': 'right',
-                                                                                                                        'children': product_price,
-                                                                                                                        'color': 'green',
-                                                                                                                        'id': {'index': product_code,
-                                                                                                                                'type': 'card_item_price'},
-                                                                                                                        'size': 'md',
-                                                                                                                        'weight': 900},
-                                                                                                                'type': 'Text'},
-                                                                                                'px': 0,
-                                                                                                'span': 5},
-                                                                                        'type': 'Col'}]},
-                                                                'type': 'Grid'},
-                                                                {'namespace': 'dash_mantine_components',
-                                                                'props': {'children': [{'namespace': 'dash_mantine_components',
-                                                                                        'props': {'children': [{'namespace': 'dash_mantine_components',
-                                                                                                                'props': {'align': 'center',
-                                                                                                                        'children': [{'namespace': 'dash_mantine_components',
-                                                                                                                                        'props': {'className': 'card-quantity-input',
-                                                                                                                                                'h': 30,
-                                                                                                                                                'hideControls': true,
-                                                                                                                                                'id': {'index': product_code,
-                                                                                                                                                        'type': 'card_item_quantity'},
-                                                                                                                                                'mih': 20,
-                                                                                                                                                'min': 0,
-                                                                                                                                                'placeholder': 0,
-                                                                                                                                                'size': 'lg',
-                                                                                                                                                'value': product_quantity,
-                                                                                                                                                'w': 50},
-                                                                                                                                        'type': 'NumberInput'},
-                                                                                                                                        {'namespace': 'dash_mantine_components',
-                                                                                                                                        'props': {'align': 'right',
-                                                                                                                                                'children': 'Quantity',
-                                                                                                                                                'size': 'md',
-                                                                                                                                                'weight': 600},
-                                                                                                                                        'type': 'Text'}]},
-                                                                                                                'type': 'Stack'}],
-                                                                                                'px': 0,
-                                                                                                'span': 4},
-                                                                                        'type': 'Col'},
-                                                                                        {'namespace': 'dash_mantine_components',
-                                                                                        'props': {'children': [{'namespace': 'dash_mantine_components',
-                                                                                                                'props': {'align': 'center',
-                                                                                                                        'children': [{'namespace': 'dash_mantine_components',
-                                                                                                                                        'props': {'children': null,
-                                                                                                                                                'id': {'index': product_code,
-                                                                                                                                                        'type': 'card_item_total'},
-                                                                                                                                                'lh': '30px',
-                                                                                                                                                'size': 'md',
-                                                                                                                                                'weight': 'bolder'},
-                                                                                                                                        'type': 'Text'},
-                                                                                                                                        {'namespace': 'dash_mantine_components',
-                                                                                                                                        'props': {'align': 'right',
-                                                                                                                                                'children': 'Total',
-                                                                                                                                                'size': 'md',
-                                                                                                                                                'weight': 600},
-                                                                                                                                        'type': 'Text'}]},
-                                                                                                                'type': 'Stack'}],
-                                                                                                'px': 0,
-                                                                                                'span': 5},
-                                                                                        'type': 'Col'}],
-                                                                        'justify': 'flex-end'},
-                                                                'type': 'Grid'}],
-                                                'span': 'auto'},
-                                        'type': 'Col'}],
-                        'className': 'card-grid',
-                        'justify': 'center'},
-                'type': 'Grid'}
-            }
-            // console.log( c(2, 5))
-            
-            let visible = [];
-            let hidden = [];
-            let items_in_cart_and_filtered_data = [];
-            let items_in_cart_not_in_filtered_data = [];
-            let not_in_cart_and_filtered_data = [];
-            
-            _data.forEach(function(item) {
-              let product_code = item['product_code'];
-              var _product_provider = item['provider'];
-              
-              if (product_code in items_pushed_to_cart && _product_provider === product_provider) {
-                items_in_cart_and_filtered_data.push(item);
-              } else if (product_code in items_pushed_to_cart && _product_provider !== product_provider) {
-                items_in_cart_not_in_filtered_data.push(item);
-              } else if  (!(product_code in items_pushed_to_cart) && (_product_provider === product_provider)) {
-                not_in_cart_and_filtered_data.push(item);
-              }
-            });
-            var product_quantity = null;
-            (not_in_cart_and_filtered_data.concat(items_in_cart_and_filtered_data)).forEach(function(item) {
-                var product_code = item['product_code'];
-                
-                if (item in items_in_cart_and_filtered_data) {
-                  product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity'];
-                }
-                
-                visible.push(
-                  shop_card(
-                    item['product_name'],
-                    product_code,
-                    item['price'],
-                    product_quantity,
-                    '/assets/images/' + product_code + '.png'
-                  )
-                );
-              });
+        make_cards: function(product_provider, product_category, search, load_more, items_pushed_to_cart, _data){
 
-              items_in_cart_not_in_filtered_data.forEach(function(item) {
+        // console.log(product_provider)
+        let list_items_pushed_to_cart = _data.filter( item => Object.keys(items_pushed_to_cart).includes( item.product_code ) )
+
+        _data = _data.filter((country) => country.product_name.toLowerCase().startsWith(search));
+        // _data = _data.filter( item =>  item.provider === product_provider );
+       
+        if (!(search)) {
+                // console.log(search,'search')
+                
+                _data = _data.filter( item =>  item.category === product_category );
+                _data = _data.filter( item =>  item.provider === product_provider );
+        
+                }
+   
+
+        let items_in_cart_not_in_filtered_data = list_items_pushed_to_cart.filter(x => !_data.includes(x));
+        
+        let filteredDataLength = _data.length
+        let paginations_size = 5
+        let start = load_more * paginations_size
+        let end = start + paginations_size
+        let remaining_items = filteredDataLength - end
+
+        display =  'block'
+        if (remaining_items <= 0) { display ='none' }
+
+        _data = _data.slice(0, end)
+        
+        let visible = [];
+        let hidden = [];
+        let items_in_cart_and_filtered_data = [];
+        let not_in_cart_and_filtered_data = [];
+
+        _data.forEach( function(item) {
+        // console.log(item)
+        let product_code = item['product_code'];
+        if (product_code in items_pushed_to_cart) {
+        items_in_cart_and_filtered_data.push(item);
+        } else  {
+        not_in_cart_and_filtered_data.push(item);
+        }
+        });
+            
+    
+        var product_quantity = null;
+
+        (not_in_cart_and_filtered_data.concat(items_in_cart_and_filtered_data)).forEach(function(item) {
+        var product_code = item['product_code'];
+  
+        if ( items_in_cart_and_filtered_data.includes(item)) {
                 product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity'];
-                var product_code = item['product_code'];
-                hidden.push(
-                    shop_card(
-                        item['product_name'],
-                        product_code,
-                        item['price'],
-                        product_quantity,
-                        '/assets/images/' + product_code + '.png'
-                      )
-                    
-                );
-              });
-              
-            return {'props': {'children': [
+
+        }
+       
+        
+        visible.push(
+                shop_card(
+                item['product_name'],
+                product_code,
+                item['price'],
+                product_quantity,
+                '/assets/images/' + product_code + '.png'
+                )
+        );
+        });
+
+        items_in_cart_not_in_filtered_data.forEach(function(item) {
+        product_quantity = items_pushed_to_cart[item['product_code']]['item_quantity'];
+        var product_code = item['product_code'];
+        hidden.push(
+                shop_card(
+                item['product_name'],
+                product_code,
+                item['price'],
+                product_quantity,
+                '/assets/images/' + product_code + '.png'
+                )
+                
+        );
+        });
+        cards = {'props': {'children': [
                 {'props': {'children': visible}, 'type': 'Div', 'namespace': 'dash_html_components'},
-             {'props': {'children': hidden, 'style': {'display': 'none'}}, 'type': 'Div', 'namespace': 'dash_html_components'}
-            ]}, 'type': 'Div', 'namespace': 'dash_html_components'}
+                {'props': {'children': hidden, 'style': {'display': 'none'}}, 'type': 'Div', 'namespace': 'dash_html_components'}
+                ]}, 'type': 'Div', 'namespace': 'dash_html_components'}
+              
+        
+        return [cards, remaining_items, display]
         
          
-            // console.log(items_in_cart_and_filtered_data, items_in_cart_not_in_filtered_data, not_in_cart_and_filtered_data)
+
             
            
 
+        },
+        item_card_add_item: function(cart_click, x_click, card_item_quantity, items_pushed_to_cart) {
+                // console.log(ctx)
+        const ctx = window.dash_clientside.callback_context
+        const triggered_id = JSON.parse(ctx.triggered[0]['prop_id'].split(".")[0])
+        const no_update = window.dash_clientside.no_update
+        // console.log()
+        ctx.inputs_list[0].forEach( function(item) {
+                let item_quantity = item['value']
+                // console.log(item_quantity)
+                let item_id = item['id']['index']
+                if (item_quantity || item_quantity === 0) {
+                        items_pushed_to_cart[item_id] = {
+                        product_code: item_id,
+                        item_quantity: item_quantity
+                        }
+                }           
+        })
+        // console.log(triggered_id.type)
+        if (triggered_id.type ==='x_out_from_cart') {
+                items_pushed_to_cart[triggered_id['index']][ 'item_quantity'] = 0
+             }
+        if (triggered_id.type ==='card_item_quantity') {
+                return [items_pushed_to_cart, no_update]
         }
+
+        let cart_items = []
+
+        cart_items.push(header)
+
+
+
+        Object.entries(items_pushed_to_cart).forEach(([_,item]) => {
+                product_code= item['product_code']
+                product_quantity = item['item_quantity']
+                if (product_quantity ===0){
+                        styles = {'display':'none'}
+                        
+                } else{
+                        styles = {}
+
+                }
+                    
+                cart_items.push(
+                    cart_item ( '/assets/images/' + product_code + '.png', product_code, product_quantity, styles)
+                )
+            })
+
         
+        return [items_pushed_to_cart, {'namespace': 'dash_html_components',
+        'props': {'children': cart_items},
+        'type': 'Div'}]
+        },
+
+      CardItemDetails(clicked_item, data) {
+        ctx = window.dash_clientside.callback_context;
+        
+        function item_detail_card (triggered_id){
+                return {'namespace': 'dash_mantine_components',
+                'props': {'children': [{'namespace': 'dash_mantine_components',
+                                        'props': {'children': {'namespace': 'dash_mantine_components',
+                                                               'props': {
+                                                                         'src': '/assets/images/' + triggered_id + '.png'},
+                                                               'type': 'Image'}},
+                                        'type': 'CardSection'},
+                                       {'namespace': 'dash_mantine_components',
+                                        'props': {'children':triggered_id.replace(/_/g, " "),
+                                                  'weight': 500},
+                                        'type': 'Text'},
+                                       {'namespace': 'dash_mantine_components',
+                                        'props': {'children': ` Cheer on your favorite red and white team in eye-popping style with these red & white striped game bib overalls! Each pair is made of 100 percent cotton for a comfortable, breathable fit regardless of the weather and includes easily adjustable shoulder straps for fans with long torsos`,
+                                                  'color': 'dimmed',
+                                                  'size': 'sm'},
+                                        'type': 'Text'}],
+                          'radius': 'md',
+                        //   'shadow': 'sm',
+                        //   'withBorder': true
+                        },
+                'type': 'Card'}
+
+        }
+ 
+
+          if (clicked_item.some((elem) => !!elem )) {
+            triggered_id = JSON.parse(ctx.triggered[0].prop_id.replace(".n_clicks", "")).index
+            console.log(triggered_id)
+          return [true, item_detail_card (triggered_id)]
+          }
+         
+            return [false, '']
+        }
+      
+       
 
 
         

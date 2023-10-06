@@ -1,0 +1,105 @@
+:root {
+    --header-height:  50px
+}
+
+
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.header {
+    padding: 10px;
+    z-index: 20;
+    height: var(--header-height);
+    position: fixed;
+    top:0;
+    width: 100%;
+}
+
+.footer {
+    position: fixed;
+    padding: 8px 15px 0 15px;
+    bottom:0;
+    width: 100%;
+    height: 70px;
+    z-index: 999;
+    color: rgb(66, 66, 66);
+}
+
+.footer .mantine-Text-root{
+    padding: 0px !important;
+}
+
+.content {
+    margin: calc(var(--header-height) + 15px) 0px;
+    
+}
+
+.test{
+    background-color: red;
+}
+
+
+@keyframes FadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+}
+
+.card-image img{
+    width: 100% !important; /* or any custom size */
+    max-height: 100px !important; 
+    object-fit: contain !important;
+    border-radius: 15px !important;
+    padding: 5px;
+    
+}
+
+.card-grid{
+    padding: 5px;
+    margin: 5px 0;
+    border-radius: 15px;
+    border:0.2px solid rgba(193, 193, 193, 0.3); 
+    box-shadow: 0px 4px 3px -3px rgba(0, 0, 0, 0.05); 
+}
+
+.card-quantity-input .mantine-NumberInput-input{
+ min-height: 100%;
+ height: 30px;
+}
+.cart-quantity-input .mantine-NumberInput-input{
+    /* min-height: 100%;
+    height: 40px; */
+    width: 40px;
+    padding:0 !important;
+    text-align: center !important;
+    border-radius: 50px;
+    float: right;
+   }
+
+.mantine-Group-root{
+    /* make all item stay in one row, add !important to override default value: wrap */
+    flex-wrap: nowrap !important;
+    overflow-x: auto; /* make list scroll when overflow */
+    scrollbar-width: none;
+    /* font-weight:bolder ; */
+}
+
+.mantine-Group-root::-webkit-scrollbar { 
+    width: 0 !important 
+}
+
+.mantine-TextInput-input {
+    border-radius: 12px !important;
+}
+
+.cart-items-headers{
+    font-size: 14px !important;
+    font-weight: bold;
+
+}
