@@ -53,19 +53,15 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         make_cards: function(product_provider, product_category, search, load_more, items_pushed_to_cart, _data){
 
-        // console.log(product_provider)
+        const no_update = window.dash_clientside.no_update
         let list_items_pushed_to_cart = _data.filter( item => Object.keys(items_pushed_to_cart).includes( item.product_code ) )
 
         _data = _data.filter((country) => country.product_name.toLowerCase().startsWith(search));
-        // _data = _data.filter( item =>  item.provider === product_provider );
-       
+
         if (!(search)) {
-                // console.log(search,'search')
-                
                 _data = _data.filter( item =>  item.category === product_category );
                 _data = _data.filter( item =>  item.provider === product_provider );
-        
-                }
+        }
    
 
         let items_in_cart_not_in_filtered_data = list_items_pushed_to_cart.filter(x => !_data.includes(x));
@@ -87,13 +83,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         let not_in_cart_and_filtered_data = [];
 
         _data.forEach( function(item) {
-        // console.log(item)
-        let product_code = item['product_code'];
-        if (product_code in items_pushed_to_cart) {
-        items_in_cart_and_filtered_data.push(item);
-        } else  {
-        not_in_cart_and_filtered_data.push(item);
-        }
+                let product_code = item['product_code'];
+                if (product_code in items_pushed_to_cart) {
+                items_in_cart_and_filtered_data.push(item);
+                } else  {
+                not_in_cart_and_filtered_data.push(item);
+                }
         });
             
     
@@ -133,12 +128,18 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 
         );
         });
+
+        if (_data.length===0){
+                visible = {'props': {'children': ['No product found, adjust your search'], 'style': {'height': 200, 'width': '100%'}}, 'type': 'Center', 'namespace': 'dash_mantine_components'}
+                
+        }
         cards = {'props': {'children': [
                 {'props': {'children': visible}, 'type': 'Div', 'namespace': 'dash_html_components'},
                 {'props': {'children': hidden, 'style': {'display': 'none'}}, 'type': 'Div', 'namespace': 'dash_html_components'}
                 ]}, 'type': 'Div', 'namespace': 'dash_html_components'}
               
         
+    
         return [cards, remaining_items, display]
         
          
@@ -148,10 +149,18 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         },
         item_card_add_item: function(cart_click, x_click, card_item_quantity, items_pushed_to_cart) {
-                // console.log(ctx)
+    
         const ctx = window.dash_clientside.callback_context
-        const triggered_id = JSON.parse(ctx.triggered[0]['prop_id'].split(".")[0])
         const no_update = window.dash_clientside.no_update
+        // avoid intial calls and unnecessary triggers
+        if (ctx.triggered.length !=1 ) { 
+                
+                return [no_update, no_update]
+        }
+        
+
+        const triggered_id = JSON.parse(ctx.triggered[0]['prop_id'].split(".")[0])
+        
         // console.log()
         ctx.inputs_list[0].forEach( function(item) {
                 let item_quantity = item['value']
@@ -231,7 +240,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
           if (clicked_item.some((elem) => !!elem )) {
             triggered_id = JSON.parse(ctx.triggered[0].prop_id.replace(".n_clicks", "")).index
-            console.log(triggered_id)
+            
           return [true, item_detail_card (triggered_id)]
           }
          
