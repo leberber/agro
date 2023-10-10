@@ -84,19 +84,21 @@ account = dmc.Paper(
     children = [
     dmc.LoadingOverlay(
        
-         style = {'height':'900px'},
+      
             children = [
                 dmc.Stack(
                     id = 'stack',
                     children=[
                         dmc.TextInput(
                             label="Username",
+                            size='xl',
                             # className = "sticky",
                             id = 'username',
                             placeholder="Your username",
                             icon=icon(icon="radix-icons:person"),
                         ),
                         dmc.TextInput(
+                              size='xl',
                              id="password",
                             label="Password",
                             placeholder="Your password",
@@ -107,7 +109,7 @@ account = dmc.Paper(
                             checked=True,
                         ),
                         dmc.Button(
-                            "Login", id="sign_in_button", variant="outline", fullWidth=True
+                            "Login", id="sign_in_button", variant="outline", fullWidth=True,   size='xl',
                         ),
                     ],
                 )
@@ -181,7 +183,7 @@ clientside_callback(
             'namespace': 'dash_mantine_components',
             'props': {'children': x,
                     'size': 'xl',
-                    'value': x,  'variant':'light'},
+                    'value': x,  'variant':'filled'},
             'type': 'Chip'}
         )
     })
@@ -212,7 +214,7 @@ clientside_callback(
                     'size': 'xl',
                     'value': x,
                   
-                     'variant':'light'
+                     'variant':'filled'
                
                      },
             'type': 'Chip'
