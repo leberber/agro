@@ -86,8 +86,13 @@ body {
     /* make all item stay in one row, add !important to override default value: wrap */
     flex-wrap: nowrap !important;
     overflow-x: auto; /* make list scroll when overflow */
-    scrollbar-width: none;
+    scrollbar-width: 0;
+    gap: 0.5rem;
     /* font-weight:bolder ; */
+    padding: 5px;
+}
+.mantine-Group-root::-webkit-scrollbar {
+    display: none;
 }
 
 .mantine-Group-root::-webkit-scrollbar { 
@@ -103,3 +108,10 @@ body {
     font-weight: bold;
 
 }
+
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 55px;
+    z-index: 20;
+  }

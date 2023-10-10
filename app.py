@@ -29,7 +29,7 @@ product_provider_options = dict(zip(product_provider_options.category, product_p
 data = data.to_dict('records')
 # print(data)
 
-
+print(pprint.pformat(dmc.Group().to_plotly_json() ))
 
 
 shop = dmc.Paper(
@@ -48,6 +48,7 @@ shop = dmc.Paper(
         
 
         dmc.TextInput(
+            className = "sticky",
             id = 'search_item',
             size = 'md',
             placeholder="Search",
@@ -62,18 +63,7 @@ shop = dmc.Paper(
     ]
 )
 
-account = dmc.Paper(
-    id = id_dict('page_layout_id', 'account'),
-    className = 'page',
-    style = {'display':'none'},
-    children = [
-        dmc.Text("account_page", size="md", color ='yellow'),
-        dmc.Text("account_page", size="md"),
-        dmc.Text("account_page", size="md"),
-        dmc.Text("Default text", size="md"),
-        dmc.Text("Default text", size="md"),
-    ]
-)
+
 
 cart = dmc.Paper(
     m = 0,
@@ -86,6 +76,46 @@ cart = dmc.Paper(
 
     ]
 )
+
+account = dmc.Paper(
+    id = id_dict('page_layout_id', 'account'),
+    className = 'page',
+    style = {'display':'none'},
+    children = [
+    dmc.LoadingOverlay(
+       
+         style = {'height':'900px'},
+            children = [
+                dmc.Stack(
+                    id = 'stack',
+                    children=[
+                        dmc.TextInput(
+                            label="Username",
+                            # className = "sticky",
+                            id = 'username',
+                            placeholder="Your username",
+                            icon=icon(icon="radix-icons:person"),
+                        ),
+                        dmc.TextInput(
+                             id="password",
+                            label="Password",
+                            placeholder="Your password",
+                            icon=icon(icon="radix-icons:lock-closed"),
+                        ),
+                        dmc.Checkbox(
+                            label="Remember me",
+                            checked=True,
+                        ),
+                        dmc.Button(
+                            "Login", id="sign_in_button", variant="outline", fullWidth=True
+                        ),
+                    ],
+                )
+            ]
+        ),
+    ]
+)
+   
 content = dmc.Container(
     className = 'content',
     children = [
@@ -101,7 +131,7 @@ content = dmc.Container(
         ),
     ]
 )
-   
+
 app.layout = html.Div(
     children=[  
         dmc.MantineProvider(
@@ -124,6 +154,19 @@ app.layout = html.Div(
     ]
 )
 
+clientside_callback(
+    ClientsideFunction(
+        namespace='clientside',
+        function_name='sign_in_form'
+    ),
+    Output("password", "error"),
+    Output("username", "error"),
+    Input("sign_in_button", "n_clicks"),
+    prevent_initial_call=True,
+)
+
+
+
 
 
 clientside_callback(
@@ -132,16 +175,20 @@ clientside_callback(
     data = Object.keys(data)
 
     let chips = []
+
     data.forEach(function(x) {
         chips.push( {
             'namespace': 'dash_mantine_components',
             'props': {'children': x,
-                    'size': 'lg',
-                    'value': x},
+                    'size': 'xl',
+                    'value': x,  'variant':'light'},
             'type': 'Chip'}
         )
     })
-    return [chips, data[2]]
+    chips = {'namespace': 'dash_mantine_components',
+ 'props': {'children': chips},
+ 'type': 'Group'}
+    return [chips, data[0]]
     }
     """,
     Output("product_category","children"),
@@ -151,20 +198,30 @@ clientside_callback(
 
 
 
+
+
 clientside_callback(
     """
     function updateProviderChips(product_category, data){
-    console.log()
+
     let chips = []
     data[product_category].forEach(function(x) {
         chips.push( {
             'namespace': 'dash_mantine_components',
             'props': {'children': x,
-                    'size': 'lg',
-                    'value': x},
-            'type': 'Chip'}
+                    'size': 'xl',
+                    'value': x,
+                  
+                     'variant':'light'
+               
+                     },
+            'type': 'Chip'
+            }
         )
     })
+        chips = {'namespace': 'dash_mantine_components',
+ 'props': {'children': chips},
+ 'type': 'Group'}
 
     return [chips, data[product_category][0]]
     }

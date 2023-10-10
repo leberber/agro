@@ -3,11 +3,18 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
    
     clientside: {
+        sign_in_form: function (n_clicks) {
+
+        return ['Incorrect Password',  'Incorrect User Name']
+            },
+
+
         theme_switcher: function (n_clicks) {
 
             let lightIcon = {'props': {'icon': 'ic:baseline-light-mode', 'width': 40, 'color':'gold'}, 'type': 'DashIconify', 'namespace': 'dash_iconify'}
             let darkIcon = {'props': {'icon': 'ic:sharp-dark-mode', 'width': 40, 'color':'#e8e3e6'}, 'type': 'DashIconify', 'namespace': 'dash_iconify'}
             let lightColorScheme =  { 
+                "fontFamily": "'YouTube Sans','Roboto',sans-serif",
                 "colorScheme": "light",
                 "shadows": {
        
@@ -17,6 +24,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
             let darktColorScheme =  { 
                 "colorScheme": "dark",
+                "fontFamily": "'YouTube Sans','Roboto',sans-serif",
                 "shadows": {
                
                     "xs": "0px 4px 3px -3px rgba(66, 66, 66, 1)",
@@ -67,7 +75,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         let items_in_cart_not_in_filtered_data = list_items_pushed_to_cart.filter(x => !_data.includes(x));
         
         let filteredDataLength = _data.length
-        let paginations_size = 5
+        let paginations_size = 7
         let start = load_more * paginations_size
         let end = start + paginations_size
         let remaining_items = filteredDataLength - end
@@ -92,7 +100,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         });
             
     
-        var product_quantity = null;
+        var product_quantity = '';
 
         (not_in_cart_and_filtered_data.concat(items_in_cart_and_filtered_data)).forEach(function(item) {
         var product_code = item['product_code'];
@@ -175,7 +183,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         })
         // console.log(triggered_id.type)
         if (triggered_id.type ==='x_out_from_cart') {
-                items_pushed_to_cart[triggered_id['index']][ 'item_quantity'] = 0
+                items_pushed_to_cart[triggered_id['index']][ 'item_quantity'] = ''
+                console.log(items_pushed_to_cart)
              }
         if (triggered_id.type ==='card_item_quantity') {
                 return [items_pushed_to_cart, no_update]
@@ -190,7 +199,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         Object.entries(items_pushed_to_cart).forEach(([_,item]) => {
                 product_code= item['product_code']
                 product_quantity = item['item_quantity']
-                if (product_quantity ===0){
+                if (product_quantity ===0 || !(product_quantity)){
                         styles = {'display':'none'}
                         
                 } else{
